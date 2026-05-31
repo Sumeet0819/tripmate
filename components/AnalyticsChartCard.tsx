@@ -6,24 +6,25 @@ import { useTheme } from "../utils/theme";
 
 const { width } = Dimensions.get("window");
 
-// High Fidelity Analytics Chart SVG Component with Diagonal Lime Stripes
+// High Fidelity Analytics Chart SVG Component with Dynamic Stripes
 const AnalyticsChart = ({ mode }: { mode: "light" | "dark" }) => {
+  const { colors } = useTheme();
   const chartWidth = width - 48; // Padding px-6 on both sides = 48
   const chartHeight = 160;
 
   // Colors based on theme
-  const strokeColor = "#A6F16D"; // Signature Lime Green
-  const verticalLineColor = "#072D1B"; // Dark Green
-  const labelColor = mode === "light" ? "#5E6573" : "#8C93A3";
+  const strokeColor = colors.primary; // Dynamic Travel Blue
+  const verticalLineColor = colors.secondary; // Premium Orange focus line
+  const labelColor = colors.onSurfaceVariant;
   const gridLineColor = mode === "light" ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)";
 
   return (
     <View style={{ width: "100%", height: chartHeight, marginTop: 16 }}>
       <Svg width="100%" height="100%" viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
         <Defs>
-          {/* Diagonal Stripes Pattern Definition */}
+          {/* Diagonal Stripes Pattern Definition using theme primary */}
           <Pattern 
-            id="limeStripes" 
+            id="themeStripes" 
             width={12} 
             height={12} 
             patternTransform="rotate(45)" 
@@ -34,9 +35,9 @@ const AnalyticsChart = ({ mode }: { mode: "light" | "dark" }) => {
               y1={0} 
               x2={0} 
               y2={12} 
-              stroke="#A6F16D" 
+              stroke={colors.primary} 
               strokeWidth={3.5} 
-              opacity={0.75}
+              opacity={0.15}
             />
           </Pattern>
         </Defs>
@@ -51,7 +52,7 @@ const AnalyticsChart = ({ mode }: { mode: "light" | "dark" }) => {
         <SvgText x={24} y={79} fill={labelColor} fontSize={10} fontWeight="600" textAnchor="end">0.8%</SvgText>
         <SvgText x={24} y={134} fill={labelColor} fontSize={10} fontWeight="600" textAnchor="end">0.4%</SvgText>
 
-        {/* Beautiful Shaded Area filled with Diagonal Lime Stripes */}
+        {/* Beautiful Shaded Area filled with Diagonal Stripes */}
         <Path
           d={`
             M 45,95 
@@ -68,7 +69,7 @@ const AnalyticsChart = ({ mode }: { mode: "light" | "dark" }) => {
             C 85,110 75,115 45,115 
             Z
           `}
-          fill="url(#limeStripes)"
+          fill="url(#themeStripes)"
         />
 
         {/* Top Boundary Line */}
@@ -143,14 +144,14 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
   onFilterPress,
   onMorePress,
 }) => {
-  const { mode } = useTheme();
+  const { colors, mode } = useTheme();
 
   return (
     <View
       style={[
         styles.card,
         {
-          backgroundColor: mode === "light" ? "#FFFFFF" : "#1A1D23",
+          backgroundColor: colors.surface,
         },
       ]}
     >
@@ -160,7 +161,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
           style={[
             styles.titleText,
             {
-              color: mode === "light" ? "#072D1B" : "#FFFFFF",
+              color: colors.onSurface,
             },
           ]}
         >
@@ -174,7 +175,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.pillFilter,
               {
-                borderColor: mode === "light" ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)",
+                borderColor: colors.outline,
               },
             ]}
             onPress={onFilterPress}
@@ -184,7 +185,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
               style={[
                 styles.filterText,
                 {
-                  color: mode === "light" ? "#072D1B" : "#FFFFFF",
+                  color: colors.onSurface,
                 },
               ]}
             >
@@ -197,7 +198,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.pillFilter,
               {
-                borderColor: mode === "light" ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)",
+                borderColor: colors.outline,
               },
             ]}
             onPress={onFilterPress}
@@ -207,7 +208,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
               style={[
                 styles.filterText,
                 {
-                  color: mode === "light" ? "#072D1B" : "#FFFFFF",
+                  color: colors.onSurface,
                   marginRight: 2,
                 },
               ]}
@@ -217,7 +218,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             <Icon 
               name="arrow-down-s-line" 
               size={10} 
-              color={mode === "light" ? "#072D1B" : "#FFFFFF"} 
+              color={colors.onSurface} 
             />
           </TouchableOpacity>
 
@@ -226,7 +227,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.moreButton,
               {
-                borderColor: mode === "light" ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)",
+                borderColor: colors.outline,
               },
             ]}
             onPress={onMorePress}
@@ -235,7 +236,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             <Icon 
               name="more-fill" 
               size={10} 
-              color={mode === "light" ? "#072D1B" : "#FFFFFF"} 
+              color={colors.onSurface} 
             />
           </TouchableOpacity>
         </View>
@@ -246,7 +247,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
         style={[
           styles.metricsRow,
           {
-            borderBottomColor: mode === "light" ? "rgba(0,0,0,0.03)" : "rgba(255,255,255,0.03)",
+            borderBottomColor: colors.outline,
           },
         ]}
       >
@@ -256,7 +257,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.metricLabel,
               {
-                color: mode === "light" ? "#5E6573" : "#8C93A3",
+                color: colors.onSurfaceVariant,
               },
             ]}
           >
@@ -266,7 +267,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.metricValue,
               {
-                color: mode === "light" ? "#072D1B" : "#FFFFFF",
+                color: colors.onSurface,
               },
             ]}
           >
@@ -280,7 +281,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.metricPercent,
               {
-                color: mode === "light" ? "#5E6573" : "#8C93A3",
+                color: colors.onSurfaceVariant,
               },
             ]}
           >
@@ -294,7 +295,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.metricLabel,
               {
-                color: mode === "light" ? "#5E6573" : "#8C93A3",
+                color: colors.onSurfaceVariant,
               },
             ]}
           >
@@ -304,7 +305,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.metricValue,
               {
-                color: mode === "light" ? "#072D1B" : "#FFFFFF",
+                color: colors.onSurface,
               },
             ]}
           >
@@ -318,7 +319,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             style={[
               styles.metricPercent,
               {
-                color: mode === "light" ? "#5E6573" : "#8C93A3",
+                color: colors.onSurfaceVariant,
               },
             ]}
           >

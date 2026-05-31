@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-remix-icon";
-import { useTheme } from "../utils/theme";
 import { useAppNavigation } from "../utils/navigation";
+import { useTheme } from "../utils/theme";
 
 const { height } = Dimensions.get("window");
 
@@ -200,10 +200,10 @@ const styles = StyleSheet.create({
   },
   planeWrapper: {
     position: "absolute",
-    top: -100,
-    left: -160,
+    top: -140,
+    left: -150,
     opacity: 0.9,
-    transform: [{ rotate: "-12deg" }],
+    transform: [{ rotate: "60deg" }],
   },
   illustrationWrapper: {
     flexDirection: "row",

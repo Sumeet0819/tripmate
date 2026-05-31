@@ -1,177 +1,232 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { useTheme } from "../../utils/theme";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
 import Icon from "react-native-remix-icon";
 import { OrganicHeader } from "../../components/OrganicHeader";
-import { MetricCard } from "../../components/MetricCard";
-import { AnalyticsChartCard } from "../../components/AnalyticsChartCard";
+import { FeaturedTripCard } from "../../components/FeaturedTripCard";
+import { TripCard } from "../../components/TripCard";
+
+const AVAILABLE_TRIPS = [
+  {
+    id: "featured-1",
+    title: "Ladakh Bike Expedition",
+    location: "Leh-Ladakh, India",
+    duration: "9 Days",
+    price: "₹34,500",
+    slotsLeft: "3 slots left",
+    category: "Adventure",
+    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400",
+    isFeatured: true,
+  },
+  {
+    id: "featured-2",
+    title: "Kerala Backwaters Cruise",
+    location: "Alleppey, Kerala",
+    duration: "5 Days",
+    price: "₹18,200",
+    slotsLeft: "6 slots left",
+    category: "Leisure",
+    image: "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400",
+    isFeatured: true,
+  },
+  {
+    id: "trip-3",
+    title: "Jaipur Forts & Heritage",
+    location: "Jaipur, Rajasthan",
+    duration: "3 Days",
+    price: "₹9,800",
+    slotsLeft: "8 slots left",
+    category: "Heritage",
+    image: "https://images.unsplash.com/photo-1477587458883-47135acdb7ae?w=400",
+    isFeatured: false,
+  },
+  {
+    id: "trip-4",
+    title: "Goa Watersports & Beach",
+    location: "Calangute, Goa",
+    duration: "4 Days",
+    price: "₹12,400",
+    slotsLeft: "2 slots left",
+    category: "Beach",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
+    isFeatured: false,
+  },
+  {
+    id: "trip-5",
+    title: "Valley of Flowers Trek",
+    location: "Chamoli, Uttarakhand",
+    duration: "7 Days",
+    price: "₹22,100",
+    slotsLeft: "Fully Booked",
+    category: "Trekking",
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400",
+    isFeatured: false,
+  },
+  {
+    id: "trip-6",
+    title: "Hampi Ruins Exploration",
+    location: "Hampi, Karnataka",
+    duration: "3 Days",
+    price: "₹8,500",
+    slotsLeft: "11 slots left",
+    category: "Heritage",
+    image: "https://images.unsplash.com/photo-1600100397608-f010f423b971?w=400",
+    isFeatured: false,
+  }
+];
 
 export default function HomeScreen() {
   const { colors, mode } = useTheme();
   const [search, setSearch] = useState("");
 
-  // Grid Summary Metrics mapped from travel planner content
-  const summaryCards = [
-    {
-      id: "1",
-      title: "Total Trips",
-      value: "128",
-      change: "+12 vs last month",
-      percent: "+9.4%",
-      isPositive: true,
-      icon: "compass-3-line",
-      circleBg: mode === "light" ? "#FEF3C7" : "#342610",
-      iconColor: mode === "light" ? "#D97706" : "#F59E0B",
-    },
-    {
-      id: "2",
-      title: "Active Platoons",
-      value: "8",
-      change: "-1 vs last month",
-      percent: "-5.2%",
-      isPositive: false,
-      icon: "team-line",
-      circleBg: mode === "light" ? "#FFEDD5" : "#3B1E10",
-      iconColor: mode === "light" ? "#EA580C" : "#F97316",
-    },
-    {
-      id: "3",
-      title: "Saved Budget",
-      value: "₹48,250",
-      change: "+₹4,200 vs last month",
-      percent: "+6.8%",
-      isPositive: true,
-      icon: "wallet-line",
-      circleBg: mode === "light" ? "#DBEAFE" : "#1E293B",
-      iconColor: mode === "light" ? "#2563EB" : "#3B82F6",
-    },
-    {
-      id: "4",
-      title: "Completed",
-      value: "42",
-      change: "-2 vs last month",
-      percent: "-3.1%",
-      isPositive: false,
-      icon: "send-plane-line",
-      circleBg: mode === "light" ? "#D1FAE5" : "#064E3B",
-      iconColor: mode === "light" ? "#059669" : "#10B981",
-    }
-  ] as const;
+  const filteredTrips = AVAILABLE_TRIPS.filter(trip => 
+    trip.title.toLowerCase().includes(search.toLowerCase()) ||
+    trip.location.toLowerCase().includes(search.toLowerCase()) ||
+    trip.category.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const featuredTrips = filteredTrips.filter(t => t.isFeatured);
+  const regularTrips = filteredTrips.filter(t => !t.isFeatured);
 
   return (
     <View 
       className="flex-1"
-      style={{ backgroundColor: "#072D1B" }} // Deep forest green outer backplate
+      style={{ backgroundColor: colors.primary }}
     >
       <StatusBar style={mode === "light" ? "dark" : "light"} />
 
-      {/* Premium Mockup Organic Header Navbar */}
+      {/* Interactive Organic Search Header */}
       <OrganicHeader
         search={search}
         onSearchChange={setSearch}
       />
 
-      {/* Main Screen Body Scroll Container with Curved sliding panel */}
+      {/* Main Discover Layout */}
       <ScrollView 
         className="flex-1"
         style={{
-          backgroundColor: mode === "light" ? "#EFF2EE" : "#0E1013",
+          backgroundColor: colors.background,
           borderTopLeftRadius: 32,
           borderTopRightRadius: 32,
-          marginTop: -8, // Panel overlap cutout under organic header
+          marginTop: -8,
         }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 110 }}
       >
-        {/* Page Title Dashboard & Plan New Trip Action Button */}
-        <View className="px-6 mt-6 flex-row justify-between items-center">
+        {/* Page Main Header */}
+        <View className="px-6 mt-6">
           <Text 
             className="text-2xl font-extrabold tracking-tight"
             style={{ 
               fontFamily: "Montserrat", 
-              color: mode === "light" ? "#072D1B" : "#FFFFFF" 
+              color: colors.onBackground 
             }}
           >
-            Dashboard
+            Explore Journeys
+          </Text>
+          <Text 
+            style={{
+              fontFamily: "Inter",
+              color: colors.onSurfaceVariant,
+              fontSize: 13,
+              marginTop: 4,
+            }}
+          >
+            Discover active platoons and join premium travel expeditions.
+          </Text>
+        </View>
+
+        {/* FEATURED TRIPS: Slider Section */}
+        {featuredTrips.length > 0 && (
+          <View style={styles.featuredSection}>
+            <View className="px-6 flex-row justify-between items-center mb-4">
+              <Text 
+                style={{ 
+                  fontFamily: "Montserrat", 
+                  color: colors.onBackground,
+                  fontSize: 16,
+                  fontWeight: "800"
+                }}
+              >
+                Featured Expeditions
+              </Text>
+              <Text 
+                style={{ 
+                  fontFamily: "Inter", 
+                  color: colors.secondary,
+                  fontSize: 12,
+                  fontWeight: "700"
+                }}
+              >
+                See All
+              </Text>
+            </View>
+
+            <ScrollView 
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
+            >
+              {featuredTrips.map((trip) => (
+                <FeaturedTripCard key={trip.id} trip={trip} />
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* ALL TRIPS: Vertical List Section */}
+        <View className="px-6 mt-8">
+          <Text 
+            style={{ 
+              fontFamily: "Montserrat", 
+              color: colors.onBackground,
+              fontSize: 16,
+              fontWeight: "800",
+              marginBottom: 16,
+            }}
+          >
+            All Available Journeys ({filteredTrips.length})
           </Text>
 
-          {/* "+ Plan New Trip" filled CTA matching mockup layout */}
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: "#1E5E3D",
-              paddingVertical: 10,
-              paddingHorizontal: 16,
-              borderRadius: 24,
-              gap: 4,
-            }}
-            activeOpacity={0.8}
-          >
-            <Icon name="add-line" size={16} color="#FFFFFF" />
-            <Text 
-              className="text-xs font-bold text-white" 
-              style={{ fontFamily: "Montserrat" }}
-            >
-              Plan New Trip
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* 2x2 summary metrics grid */}
-        <View className="px-6 mt-6 gap-y-6">
-          {/* Row 1 */}
-          <View className="flex-row justify-between w-full">
-            {summaryCards.slice(0, 2).map((card) => (
-              <MetricCard
-                key={card.id}
-                title={card.title}
-                value={card.value}
-                change={card.change}
-                percent={card.percent}
-                isPositive={card.isPositive}
-                icon={card.icon}
-                iconColor={card.iconColor}
-                circleBg={card.circleBg}
-              />
-            ))}
-          </View>
-
-          {/* Row 2 */}
-          <View className="flex-row justify-between w-full">
-            {summaryCards.slice(2, 4).map((card) => (
-              <MetricCard
-                key={card.id}
-                title={card.title}
-                value={card.value}
-                change={card.change}
-                percent={card.percent}
-                isPositive={card.isPositive}
-                icon={card.icon}
-                iconColor={card.iconColor}
-                circleBg={card.circleBg}
-              />
-            ))}
-          </View>
-        </View>
-
-        {/* Travel Analytics Card Section */}
-        <View className="px-6 mt-6">
-          <AnalyticsChartCard
-            title="Travel Analytics"
-            rateValue="0.78%"
-            ratePercent="16%"
-            deliveryValue="4,652"
-            deliveryPercent="0.6%"
-          />
+          {filteredTrips.length === 0 ? (
+            <View style={[styles.emptyContainer, { backgroundColor: colors.surface }]}>
+              <Icon name="search-eye-line" size={40} color={colors.onSurfaceVariant} />
+              <Text style={[styles.emptyText, { color: colors.onSurface }]}>
+                No trips matching your search
+              </Text>
+            </View>
+          ) : (
+            <View style={{ gap: 16 }}>
+              {regularTrips.concat(search ? featuredTrips : []).map((trip) => (
+                <TripCard 
+                  key={trip.id} 
+                  trip={trip} 
+                  onJoinPress={() => console.log("Joined:", trip.title)}
+                />
+              ))}
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  featuredSection: {
+    marginTop: 24,
+  },
+  emptyContainer: {
+    paddingVertical: 48,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 16,
+    gap: 12,
+  },
+  emptyText: {
+    fontFamily: "Inter",
+    fontSize: 13,
+    fontWeight: "600",
+  }
+});

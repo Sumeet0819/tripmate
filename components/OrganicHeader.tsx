@@ -1,8 +1,9 @@
-import React from "react";
-import { View, TouchableOpacity, TextInput, Image, StyleSheet } from "react-native";
+import React, { useState, useRef } from "react";
+import { Image, StyleSheet, TextInput, TouchableOpacity, View, Dimensions } from "react-native";
 import Icon from "react-native-remix-icon";
 import Svg, { Path } from "react-native-svg";
 import { useTheme } from "../utils/theme";
+import { MotiView } from "moti";
 
 // Organic Connected Blob SVG Background
 const OrganicPillBackground = ({ color }: { color: string }) => (
@@ -27,79 +28,186 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
   onNotificationPress,
   onProfilePress,
 }) => {
-  const { rounded, toggleTheme } = useTheme();
+  const { colors, mode, rounded, toggleTheme } = useTheme();
+  const [isFocused, setIsFocused] = useState(false);
+  const searchInputRef = useRef<TextInput>(null);
+
+  const screenWidth = Dimensions.get("window").width;
+  const AVAILABLE_WIDTH = screenWidth - 48; // 24 padding on each side
+  const CONTAINER_LEFT = AVAILABLE_WIDTH - 280; // Distance from left edge of content to connectedContainer
 
   return (
-    <View style={styles.headerBar}>
-      {/* Left Lime Starburst Button (Theme Toggle) */}
-      <TouchableOpacity
-        onPress={toggleTheme}
-        style={[
-          styles.toggleButton,
-          {
-            borderRadius: rounded.full,
-            backgroundColor: "#A6F16D", // Always Signature Lime green for mockup brand presence
-          },
-        ]}
-        activeOpacity={0.8}
+    <View style={[styles.headerBar, { backgroundColor: colors.primary }]}>
+      {/* Left Dynamic Theme Toggle Button */}
+      <MotiView
+        animate={{
+          opacity: isFocused ? 0 : 1,
+          scale: isFocused ? 0.8 : 1,
+        }}
+        transition={
+          isFocused
+            ? { type: "timing", duration: 50 }
+            : { type: "spring", damping: 15, stiffness: 180 }
+        }
+        pointerEvents={isFocused ? "none" : "auto"}
+        style={styles.toggleButtonContainer}
       >
-        <Icon 
-          name="asterisk" 
-          size={22} 
-          color="#072D1B" // Dark forest green asterisk
-        />
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={toggleTheme}
+          style={[
+            styles.toggleButton,
+            {
+              borderRadius: rounded.full,
+              backgroundColor: colors.secondary, // Dynamic themed brand accent
+            },
+          ]}
+          activeOpacity={0.8}
+          disabled={isFocused}
+        >
+          <Icon 
+            name={mode === "light" ? "moon-fill" : "sun-fill"} 
+            size={22} 
+            color={colors.onSecondary} // High contrast themed icon color
+          />
+        </TouchableOpacity>
+      </MotiView>
 
       {/* Right Fluid Connected Pill Container */}
       <View style={styles.connectedContainer}>
         {/* Organic Connected Blob SVG Background */}
-        <OrganicPillBackground color="#1E5E3D" />
+        <MotiView
+          animate={{
+            opacity: isFocused ? 0 : 1,
+            scale: isFocused ? 0.95 : 1,
+          }}
+          transition={
+            isFocused
+              ? { type: "timing", duration: 50 }
+              : { type: "spring", damping: 15, stiffness: 180 }
+          }
+          pointerEvents="none"
+          style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0 }}
+        >
+          <OrganicPillBackground color={colors.primaryContainer} />
+        </MotiView>
 
         {/* Absolute Overlaid Components */}
         
         {/* 1. Search Capsule Area */}
-        <View style={styles.searchArea}>
+        <MotiView
+          animate={{
+            left: isFocused ? -CONTAINER_LEFT : 12,
+            width: isFocused ? AVAILABLE_WIDTH : 110,
+            paddingLeft: isFocused ? 16 : 0,
+            backgroundColor: isFocused ? colors.primaryContainer : colors.primaryContainer + "00",
+          }}
+          transition={{
+            type: "spring",
+            damping: 25,
+            mass: 0.8,
+            stiffness: 150,
+          }}
+          style={[
+            styles.searchArea, 
+            { 
+              borderRadius: 24, 
+              zIndex: isFocused ? 99 : 1 
+            }
+          ]}
+        >
           <Icon 
             name="search-2-line" 
             size={16} 
-            color="#FFFFFF" 
+            color={colors.onPrimaryContainer} 
           />
           <TextInput
-            style={styles.searchInput}
+            ref={searchInputRef}
+            style={[styles.searchInput, { color: colors.onPrimaryContainer }]}
             placeholder="SEARCH"
-            placeholderTextColor="rgba(255, 255, 255, 0.7)"
+            placeholderTextColor={colors.onPrimaryContainer + "B0"}
             value={search}
             onChangeText={onSearchChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           />
-        </View>
+          {isFocused && (
+            <TouchableOpacity
+              onPress={() => {
+                if (search) {
+                  onSearchChange("");
+                } else {
+                  searchInputRef.current?.blur();
+                }
+              }}
+              style={styles.clearButton}
+              activeOpacity={0.7}
+            >
+              <Icon 
+                name="close-line" 
+                size={16} 
+                color={colors.onPrimaryContainer} 
+              />
+            </TouchableOpacity>
+          )}
+        </MotiView>
 
         {/* 2. Notification Bell Area */}
-        <TouchableOpacity 
+        <MotiView
+          animate={{
+            opacity: isFocused ? 0 : 1,
+            scale: isFocused ? 0 : 1,
+          }}
+          transition={
+            isFocused
+              ? { type: "timing", duration: 50 }
+              : { type: "spring", damping: 15, stiffness: 180 }
+          }
+          pointerEvents={isFocused ? "none" : "auto"}
           style={styles.bellArea}
-          activeOpacity={0.7}
-          onPress={onNotificationPress}
         >
-          <Icon 
-            name="notification-3-line" 
-            size={18} 
-            color="#FFFFFF" 
-          />
-          {/* Lime badge dot as shown in the premium mockup */}
-          <View style={styles.limeBadgeDot} />
-        </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.iconContainer}
+            activeOpacity={0.7}
+            onPress={onNotificationPress}
+            disabled={isFocused}
+          >
+            <Icon 
+              name="notification-3-line" 
+              size={18} 
+              color={colors.onPrimaryContainer} 
+            />
+            {/* Lime badge dot as shown in the premium mockup */}
+            <View style={styles.limeBadgeDot} />
+          </TouchableOpacity>
+        </MotiView>
 
         {/* 3. Circular Profile Avatar Area */}
-        <TouchableOpacity 
+        <MotiView
+          animate={{
+            opacity: isFocused ? 0 : 1,
+            scale: isFocused ? 0 : 1,
+          }}
+          transition={
+            isFocused
+              ? { type: "timing", duration: 50 }
+              : { type: "spring", damping: 15, stiffness: 180 }
+          }
+          pointerEvents={isFocused ? "none" : "auto"}
           style={styles.avatarArea}
-          activeOpacity={0.8}
-          onPress={onProfilePress}
         >
-          <Image
-            source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" }}
-            style={styles.avatarImage}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.avatarTouchable}
+            activeOpacity={0.8}
+            onPress={onProfilePress}
+            disabled={isFocused}
+          >
+            <Image
+              source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" }}
+              style={styles.avatarImage}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+        </MotiView>
       </View>
     </View>
   );
@@ -113,7 +221,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#072D1B", // Deep forest green header background from mockup
+    backgroundColor: "transparent",
+  },
+  toggleButtonContainer: {
+    width: 48,
+    height: 48,
   },
   toggleButton: {
     width: 48,
@@ -146,12 +258,25 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     color: "#FFFFFF",
   },
+  clearButton: {
+    paddingLeft: 6,
+    paddingRight: 16,
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   bellArea: {
     position: "absolute",
     left: 157, // Center is 175. 175 - 18 = 157
     top: 6, // 24 - 18 = 6
     width: 36,
     height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconContainer: {
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -175,8 +300,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#A6F16D", // Signature Lime outline from mockup
   },
+  avatarTouchable: {
+    width: "100%",
+    height: "100%",
+  },
   avatarImage: {
     width: "100%",
     height: "100%",
   },
-});
+} as any);

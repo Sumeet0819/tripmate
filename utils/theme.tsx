@@ -170,14 +170,7 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const systemScheme = useColorScheme();
   const [mode, setMode] = useState<"light" | "dark">("light");
-
-  useEffect(() => {
-    if (systemScheme === "dark" || systemScheme === "light") {
-      setMode(systemScheme);
-    }
-  }, [systemScheme]);
 
   const toggleTheme = () => {
     setMode((prev) => (prev === "light" ? "dark" : "light"));
