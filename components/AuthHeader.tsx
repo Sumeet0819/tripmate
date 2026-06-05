@@ -33,7 +33,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
   };
 
   return (
-    <View 
+    <View
       style={[
         styles.headerContainer,
         {
@@ -69,26 +69,14 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
           ]}
           activeOpacity={0.8}
         >
-          <Icon 
-            name={mode === "light" ? "moon-line" : "sun-line"} 
-            size={18} 
-            color="#FFFFFF" 
-          />
+          <Icon name={mode === "light" ? "moon-line" : "sun-line"} size={18} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
       {/* Typography Header Content */}
       <View style={styles.typographyContainer}>
-        <Text 
-          style={styles.titleText}
-        >
-          {title}
-        </Text>
-        <Text 
-          style={styles.subtitleText}
-        >
-          {subtitle}
-        </Text>
+        <Text style={styles.titleText}>{title}</Text>
+        <Text style={styles.subtitleText}>{subtitle}</Text>
       </View>
 
       {/* Travel Simplified Graphic Art Overlay */}
@@ -101,7 +89,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
         {/* Suitcase and Hat illustration */}
         <View style={styles.illustrationWrapper}>
           {/* Suitcase (Orange / Secondary Color) */}
-          <View 
+          <View
             style={[
               styles.suitcase,
               {
@@ -110,9 +98,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
             ]}
           >
             {/* Suitcase Handle */}
-            <View 
-              style={styles.suitcaseHandle}
-            />
+            <View style={styles.suitcaseHandle} />
             {/* Stripes */}
             <View style={[styles.suitcaseStripe, { top: 32 }]} />
             <View style={[styles.suitcaseStripe, { top: 64 }]} />
@@ -120,9 +106,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
           </View>
 
           {/* Hat */}
-          <View 
-            style={styles.hat}
-          >
+          <View style={styles.hat}>
             <View style={styles.hatInner} />
           </View>
         </View>
@@ -135,10 +119,7 @@ export const AuthHeader: React.FC<AuthHeaderProps> = ({
           return (
             <View
               key={idx}
-              style={[
-                styles.dot,
-                isActive ? styles.activeDot : styles.inactiveDot,
-              ]}
+              style={[styles.dot, isActive ? styles.activeDot : styles.inactiveDot]}
             />
           );
         })}

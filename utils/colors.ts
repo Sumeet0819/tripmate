@@ -1,7 +1,7 @@
 /**
  * Converts a hex color string to rgba format.
  * Matches 3-digit and 6-digit hex values.
- * 
+ *
  * @param hex - Hex color code (e.g. "#FF6B35" or "FF6B35")
  * @param alpha - Opacity value between 0 and 1
  */

@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { useAppNavigation } from "../../utils/navigation";
 import { useTheme } from "../../utils/theme";
 import { StatusBar } from "expo-status-bar";
@@ -25,10 +19,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View 
-      className="flex-1"
-      style={{ backgroundColor: colors.background }}
-    >
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <StatusBar style="light" />
 
       <KeyboardAvoidingView
@@ -57,17 +48,13 @@ export default function LoginScreen() {
 
             {/* Continue Button */}
             <View className="mt-6">
-              <PillButton
-                title="Continue"
-                onPress={handleLogin}
-                variant="white"
-              />
+              <PillButton title="Continue" onPress={handleLogin} variant="white" />
             </View>
 
             {/* Divider */}
             <View className="flex-row items-center my-8 gap-3">
               <View className="flex-1 h-[1px]" style={{ backgroundColor: colors.outline }} />
-              <Text 
+              <Text
                 className="text-[12px] font-semibold uppercase tracking-widest"
                 style={{
                   fontFamily: "Inter",
@@ -80,7 +67,7 @@ export default function LoginScreen() {
             </View>
 
             {/* Continue with Google button */}
-            <PillButton 
+            <PillButton
               title="Continue with Google"
               onPress={handleLogin}
               variant="google"

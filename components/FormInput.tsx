@@ -30,14 +30,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   return (
     <View style={styles.container}>
       {/* Upper Label */}
-      <Text
-        style={[
-          styles.label,
-          { color: colors.onSurfaceVariant },
-        ]}
-      >
-        {label.toUpperCase()}
-      </Text>
+      <Text style={[styles.label, { color: colors.onSurfaceVariant }]}>{label.toUpperCase()}</Text>
 
       {/* Input Field Container */}
       <View
@@ -55,10 +48,7 @@ export const FormInput: React.FC<FormInputProps> = ({
 
         {/* Text Input */}
         <TextInput
-          style={[
-            styles.input,
-            { color: colors.onSurface },
-          ]}
+          style={[styles.input, { color: colors.onSurface }]}
           placeholder={placeholder}
           placeholderTextColor={colors.onSurfaceVariant}
           value={value}

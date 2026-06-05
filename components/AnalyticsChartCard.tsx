@@ -23,20 +23,20 @@ const AnalyticsChart = ({ mode }: { mode: "light" | "dark" }) => {
       <Svg width="100%" height="100%" viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
         <Defs>
           {/* Diagonal Stripes Pattern Definition using theme primary */}
-          <Pattern 
-            id="themeStripes" 
-            width={12} 
-            height={12} 
-            patternTransform="rotate(45)" 
+          <Pattern
+            id="themeStripes"
+            width={12}
+            height={12}
+            patternTransform="rotate(45)"
             patternUnits="userSpaceOnUse"
           >
-            <Line 
-              x1={0} 
-              y1={0} 
-              x2={0} 
-              y2={12} 
-              stroke={colors.primary} 
-              strokeWidth={3.5} 
+            <Line
+              x1={0}
+              y1={0}
+              x2={0}
+              y2={12}
+              stroke={colors.primary}
+              strokeWidth={3.5}
               opacity={0.15}
             />
           </Pattern>
@@ -48,9 +48,15 @@ const AnalyticsChart = ({ mode }: { mode: "light" | "dark" }) => {
         <Line x1={32} y1={130} x2={chartWidth} y2={130} stroke={gridLineColor} strokeWidth={1} />
 
         {/* Y Axis Labels */}
-        <SvgText x={24} y={24} fill={labelColor} fontSize={10} fontWeight="600" textAnchor="end">1.0%</SvgText>
-        <SvgText x={24} y={79} fill={labelColor} fontSize={10} fontWeight="600" textAnchor="end">0.8%</SvgText>
-        <SvgText x={24} y={134} fill={labelColor} fontSize={10} fontWeight="600" textAnchor="end">0.4%</SvgText>
+        <SvgText x={24} y={24} fill={labelColor} fontSize={10} fontWeight="600" textAnchor="end">
+          1.0%
+        </SvgText>
+        <SvgText x={24} y={79} fill={labelColor} fontSize={10} fontWeight="600" textAnchor="end">
+          0.8%
+        </SvgText>
+        <SvgText x={24} y={134} fill={labelColor} fontSize={10} fontWeight="600" textAnchor="end">
+          0.4%
+        </SvgText>
 
         {/* Beautiful Shaded Area filled with Diagonal Stripes */}
         <Path
@@ -111,15 +117,71 @@ const AnalyticsChart = ({ mode }: { mode: "light" | "dark" }) => {
         {/* Dark Green Center Circle */}
         <Circle cx={240} cy={74} r={14} fill={verticalLineColor} />
         {/* White Percentage Label inside Circle */}
-        <SvgText x={240} y={78} fill="#FFFFFF" fontSize={9} fontWeight="bold" textAnchor="middle">34%</SvgText>
+        <SvgText x={240} y={78} fill="#FFFFFF" fontSize={9} fontWeight="bold" textAnchor="middle">
+          34%
+        </SvgText>
 
         {/* X Axis Labels */}
-        <SvgText x={45} y={155} fill={labelColor} fontSize={10} fontWeight="bold" textAnchor="middle">Jan</SvgText>
-        <SvgText x={110} y={155} fill={labelColor} fontSize={10} fontWeight="bold" textAnchor="middle">Feb</SvgText>
-        <SvgText x={175} y={155} fill={labelColor} fontSize={10} fontWeight="bold" textAnchor="middle">Mar</SvgText>
-        <SvgText x={240} y={155} fill={labelColor} fontSize={10} fontWeight="bold" textAnchor="middle">Apr</SvgText>
-        <SvgText x={305} y={155} fill={labelColor} fontSize={10} fontWeight="bold" textAnchor="middle">May</SvgText>
-        <SvgText x={350} y={155} fill={labelColor} fontSize={10} fontWeight="bold" textAnchor="middle">Jun</SvgText>
+        <SvgText
+          x={45}
+          y={155}
+          fill={labelColor}
+          fontSize={10}
+          fontWeight="bold"
+          textAnchor="middle"
+        >
+          Jan
+        </SvgText>
+        <SvgText
+          x={110}
+          y={155}
+          fill={labelColor}
+          fontSize={10}
+          fontWeight="bold"
+          textAnchor="middle"
+        >
+          Feb
+        </SvgText>
+        <SvgText
+          x={175}
+          y={155}
+          fill={labelColor}
+          fontSize={10}
+          fontWeight="bold"
+          textAnchor="middle"
+        >
+          Mar
+        </SvgText>
+        <SvgText
+          x={240}
+          y={155}
+          fill={labelColor}
+          fontSize={10}
+          fontWeight="bold"
+          textAnchor="middle"
+        >
+          Apr
+        </SvgText>
+        <SvgText
+          x={305}
+          y={155}
+          fill={labelColor}
+          fontSize={10}
+          fontWeight="bold"
+          textAnchor="middle"
+        >
+          May
+        </SvgText>
+        <SvgText
+          x={350}
+          y={155}
+          fill={labelColor}
+          fontSize={10}
+          fontWeight="bold"
+          textAnchor="middle"
+        >
+          Jun
+        </SvgText>
       </Svg>
     </View>
   );
@@ -181,7 +243,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             onPress={onFilterPress}
             activeOpacity={0.7}
           >
-            <Text 
+            <Text
               style={[
                 styles.filterText,
                 {
@@ -204,7 +266,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             onPress={onFilterPress}
             activeOpacity={0.7}
           >
-            <Text 
+            <Text
               style={[
                 styles.filterText,
                 {
@@ -215,11 +277,7 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             >
               Trips
             </Text>
-            <Icon 
-              name="arrow-down-s-line" 
-              size={10} 
-              color={colors.onSurface} 
-            />
+            <Icon name="arrow-down-s-line" size={10} color={colors.onSurface} />
           </TouchableOpacity>
 
           {/* 3. Triple Dots More Button */}
@@ -233,17 +291,13 @@ export const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
             onPress={onMorePress}
             activeOpacity={0.7}
           >
-            <Icon 
-              name="more-fill" 
-              size={10} 
-              color={colors.onSurface} 
-            />
+            <Icon name="more-fill" size={10} color={colors.onSurface} />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Metrics under the title */}
-      <View 
+      <View
         style={[
           styles.metricsRow,
           {

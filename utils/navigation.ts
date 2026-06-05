@@ -18,7 +18,7 @@ export const ROUTE_PATHS = {
   home: "/(tabs)/home",
 } as const;
 
-export type RouteType = typeof ROUTES[keyof typeof ROUTES];
+export type RouteType = (typeof ROUTES)[keyof typeof ROUTES];
 
 export function useAppNavigation() {
   // Use React Navigation's native hook directly as requested

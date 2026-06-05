@@ -1,0 +1,17 @@
+node_modules
+.git
+.expo
+.next
+dist
+build
+coverage
+android/app/build
+android/build
+ios/build
+ios/Pods
+*.log
+*.apk
+*.aab
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

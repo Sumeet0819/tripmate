@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useColorScheme } from "react-native";
+import React, { createContext, useContext, useState } from "react";
 
 // Ported exactly from DESIGN (3).md
 export const LIGHT_COLORS = {

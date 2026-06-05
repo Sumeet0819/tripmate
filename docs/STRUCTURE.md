@@ -11,35 +11,39 @@ To develop the application efficiently, the codebase is structured around modula
 ### 1.1 Frontend (Mobile App - Expo Router)
 
 #### 🖥️ UI & Screen Components
-*   **Onboarding Components:** Swipable intro cards, layout templates, pagination indicators, and mode-switching controls.
-*   **Authentication Forms:** Reusable, validated fields for mobile numbers, passwords, emails, name entries, and OTP code verification grids.
-*   **Discovery Hub (Home):** Categorized filter tabs, horizontal featured sliders, list scrolling feeds, search inputs, and organic curved layouts.
-*   **Analytics Dashboard:** Visual indicators, numeric widgets for saved travel capital, and SVG charts for tracking activity.
-*   **Platoons (Squads) Interfaces:** Lists of user groups, join request logs (for squad leaders), custom itinerary input dialogs, and a live chat bubble layout.
-*   **User Profile Screen:** Preference checklists (travel styles), profile summary badges, and settings lists.
+
+- **Onboarding Components:** Swipable intro cards, layout templates, pagination indicators, and mode-switching controls.
+- **Authentication Forms:** Reusable, validated fields for mobile numbers, passwords, emails, name entries, and OTP code verification grids.
+- **Discovery Hub (Home):** Categorized filter tabs, horizontal featured sliders, list scrolling feeds, search inputs, and organic curved layouts.
+- **Analytics Dashboard:** Visual indicators, numeric widgets for saved travel capital, and SVG charts for tracking activity.
+- **Platoons (Squads) Interfaces:** Lists of user groups, join request logs (for squad leaders), custom itinerary input dialogs, and a live chat bubble layout.
+- **User Profile Screen:** Preference checklists (travel styles), profile summary badges, and settings lists.
 
 #### ⚙️ Service & Infrastructure Components
-*   **Redux Slices:** Slices for authentication sessions, trip feeds, and platoon chat groups.
-*   **Stripe Payment Wrappers:** Context hooks validating checkout configurations and native sheets triggers.
-*   **WebSockets Hooks:** Real-time socket handlers listening for incoming messages, user typing statuses, and reconnect events inside active chat scopes.
-*   **Navigation & Custom Hooks:** Hook definitions mapping path redirects and standard safe area parameters.
+
+- **Redux Slices:** Slices for authentication sessions, trip feeds, and platoon chat groups.
+- **Stripe Payment Wrappers:** Context hooks validating checkout configurations and native sheets triggers.
+- **WebSockets Hooks:** Real-time socket handlers listening for incoming messages, user typing statuses, and reconnect events inside active chat scopes.
+- **Navigation & Custom Hooks:** Hook definitions mapping path redirects and standard safe area parameters.
 
 ---
 
 ### 1.2 Backend (REST API & Socket Server - Express)
 
 #### 🔀 API Routing & Logic
-*   **Authentication Sync:** Validates Supabase JWTs and copies user records into public tables.
-*   **Trip Coordinators:** Resolves queries with search parameters, checks role permissions, and creates trip records.
-*   **Platoon Directors:** Manages squad creation, processes join approvals, and fetches historical chats from PostgreSQL.
-*   **Dashboard Aggregators:** Executes PostgreSQL group-by queries to compute trip numbers, platoon counts, and estimated savings.
-*   **Payment Managers:** Creates Stripe Payment Intents, ephemeral customer keys, and verifies Stripe Webhook signatures.
+
+- **Authentication Sync:** Validates Supabase JWTs and copies user records into public tables.
+- **Trip Coordinators:** Resolves queries with search parameters, checks role permissions, and creates trip records.
+- **Platoon Directors:** Manages squad creation, processes join approvals, and fetches historical chats from PostgreSQL.
+- **Dashboard Aggregators:** Executes PostgreSQL group-by queries to compute trip numbers, platoon counts, and estimated savings.
+- **Payment Managers:** Creates Stripe Payment Intents, ephemeral customer keys, and verifies Stripe Webhook signatures.
 
 #### 🔒 Security & Middleware
-*   **Auth Filter:** Express middleware inspecting JWT authorizations and passing decrypted UUIDs down routing tracks.
-*   **Body Validators:** Validates incoming payloads to ensure correct data formats before writing to Supabase.
-*   **Errors Processor:** Captures API crash states and returns standardized error payloads.
-*   **Sockets Room Manager:** Maps socket IDs to platoon rooms (`socket.join`) and manages message persistence to PostgreSQL.
+
+- **Auth Filter:** Express middleware inspecting JWT authorizations and passing decrypted UUIDs down routing tracks.
+- **Body Validators:** Validates incoming payloads to ensure correct data formats before writing to Supabase.
+- **Errors Processor:** Captures API crash states and returns standardized error payloads.
+- **Sockets Room Manager:** Maps socket IDs to platoon rooms (`socket.join`) and manages message persistence to PostgreSQL.
 
 ---
 
@@ -130,13 +134,15 @@ tripmate/
 ## 3. Directory & File Responsibilities
 
 ### 3.1 Backend Service Core
-*   `server.js`: Starts the Express server and links Socket.io connection handshakes. Standardizes API routers under `/api/v1/` routes.
-*   `config/supabase.js`: Initializes `@supabase/supabase-js` using environment variables. Allows the Express controllers to query the Postgres database.
-*   `controllers/paymentController.js`: Links Stripe Node SDK. Generates Stripe client keys for mobile users and handles payment webhook updates.
-*   `models/schema.sql`: Contains the raw SQL table declarations to build database tables directly in the Supabase SQL editor.
+
+- `server.js`: Starts the Express server and links Socket.io connection handshakes. Standardizes API routers under `/api/v1/` routes.
+- `config/supabase.js`: Initializes `@supabase/supabase-js` using environment variables. Allows the Express controllers to query the Postgres database.
+- `controllers/paymentController.js`: Links Stripe Node SDK. Generates Stripe client keys for mobile users and handles payment webhook updates.
+- `models/schema.sql`: Contains the raw SQL table declarations to build database tables directly in the Supabase SQL editor.
 
 ### 3.2 Frontend Mobile Client Core
-*   `app/_layout.tsx`: Wraps screens in `ReduxProvider`, `ThemeProvider`, `SafeAreaProvider`, and `StripeProvider`. Sets up the status bar theme.
-*   `redux/store.ts`: The central state store combining the `auth`, `trip`, and `platoon` slices, configured with middleware to ignore non-serializable socket elements.
-*   `components/PlatoonChat.tsx`: Handles messages mapping and triggers socket emitters (`send_message`, `typing_indicator`) to update squad members instantly.
-*   `utils/theme.tsx`: Injects light/dark mode properties to NativeWind variables.
+
+- `app/_layout.tsx`: Wraps screens in `ReduxProvider`, `ThemeProvider`, `SafeAreaProvider`, and `StripeProvider`. Sets up the status bar theme.
+- `redux/store.ts`: The central state store combining the `auth`, `trip`, and `platoon` slices, configured with middleware to ignore non-serializable socket elements.
+- `components/PlatoonChat.tsx`: Handles messages mapping and triggers socket emitters (`send_message`, `typing_indicator`) to update squad members instantly.
+- `utils/theme.tsx`: Injects light/dark mode properties to NativeWind variables.

@@ -1,0 +1,6 @@
+node_modules/
+.expo/
+android/
+metro.config.js
+babel.config.js
+generate_placeholders.js

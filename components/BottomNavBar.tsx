@@ -21,8 +21,8 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ state, descriptors, 
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-            ? options.title
-            : route.name;
+              ? options.title
+              : route.name;
 
         const isFocused = state.index === index;
 
@@ -57,11 +57,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ state, descriptors, 
 
         return (
           <View key={route.key} style={styles.tabItem}>
-            <TouchableOpacity
-              onPress={onPress}
-              activeOpacity={0.8}
-              style={styles.touchable}
-            >
+            <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={styles.touchable}>
               <MotiView
                 animate={{
                   backgroundColor: isFocused ? colors.primaryContainer : "transparent",
@@ -76,21 +72,21 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ state, descriptors, 
                 }}
                 style={styles.animatedCapsule}
               >
-                <Icon 
-                  name={(isFocused ? iconFocused : iconUnfocused) as any} 
-                  size={18} 
-                  color={isFocused ? colors.onPrimaryContainer : colors.onPrimary + "B0"} 
+                <Icon
+                  name={(isFocused ? iconFocused : iconUnfocused) as any}
+                  size={18}
+                  color={isFocused ? colors.onPrimaryContainer : colors.onPrimary + "B0"}
                 />
-                
+
                 {isFocused && (
                   <MotiText
                     from={{ opacity: 0, scale: 0.8, translateX: -6 }}
                     animate={{ opacity: 1, scale: 1, translateX: 0 }}
-                    transition={{ 
-                      type: "spring", 
+                    transition={{
+                      type: "spring",
                       damping: 22,
                       mass: 0.8,
-                      stiffness: 160 
+                      stiffness: 160,
                     }}
                     style={[styles.activeText, { color: colors.onPrimaryContainer }]}
                     numberOfLines={1}

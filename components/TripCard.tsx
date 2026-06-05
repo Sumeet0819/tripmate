@@ -32,7 +32,7 @@ export const TripCard: React.FC<TripCardProps> = ({ trip, onJoinPress }) => {
           <Text style={styles.durationText}>{trip.duration.toUpperCase()}</Text>
         </View>
       </View>
-      
+
       {/* Right Column: Dynamic Stacked Details */}
       <View style={styles.contentWrapper}>
         {/* Top: Category Tag & Location */}
@@ -44,7 +44,10 @@ export const TripCard: React.FC<TripCardProps> = ({ trip, onJoinPress }) => {
           </View>
           <View style={styles.locationWrapper}>
             <Icon name="map-pin-2-fill" size={10} color={colors.onSurfaceVariant} />
-            <Text style={[styles.locationText, { color: colors.onSurfaceVariant }]} numberOfLines={1}>
+            <Text
+              style={[styles.locationText, { color: colors.onSurfaceVariant }]}
+              numberOfLines={1}
+            >
               {trip.location.split(",")[0]}
             </Text>
           </View>
@@ -58,16 +61,11 @@ export const TripCard: React.FC<TripCardProps> = ({ trip, onJoinPress }) => {
         {/* Bottom Area: Pricing, Pulse Status, and Premium CTA */}
         <View style={styles.footerRow}>
           <View style={styles.priceColumn}>
-            <Text style={[styles.priceText, { color: colors.primary }]}>
-              {trip.price}
-            </Text>
+            <Text style={[styles.priceText, { color: colors.primary }]}>{trip.price}</Text>
             {/* Pulsing Status indicator dot */}
             <View style={styles.statusDotRow}>
-              <View 
-                style={[
-                  styles.statusDot, 
-                  { backgroundColor: isBooked ? colors.error : "#10B981" }
-                ]} 
+              <View
+                style={[styles.statusDot, { backgroundColor: isBooked ? colors.error : "#10B981" }]}
               />
               <Text style={[styles.slotsText, { color: colors.onSurfaceVariant }]}>
                 {trip.slotsLeft}
@@ -78,22 +76,27 @@ export const TripCard: React.FC<TripCardProps> = ({ trip, onJoinPress }) => {
           <TouchableOpacity
             disabled={isBooked}
             style={[
-              styles.joinButton, 
-              { 
+              styles.joinButton,
+              {
                 backgroundColor: isBooked ? colors.outline : colors.secondary,
-              }
+              },
             ]}
             onPress={onJoinPress}
             activeOpacity={0.8}
           >
-            <Text style={[styles.joinButtonText, { color: isBooked ? colors.onSurfaceVariant : colors.onSecondary }]}>
+            <Text
+              style={[
+                styles.joinButtonText,
+                { color: isBooked ? colors.onSurfaceVariant : colors.onSecondary },
+              ]}
+            >
               {isBooked ? "SOLD OUT" : "JOIN"}
             </Text>
             {!isBooked && (
-              <Icon 
-                name="arrow-right-s-line" 
-                size={12} 
-                color={colors.onSecondary} 
+              <Icon
+                name="arrow-right-s-line"
+                size={12}
+                color={colors.onSecondary}
                 style={styles.arrowIcon}
               />
             )}

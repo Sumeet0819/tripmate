@@ -56,24 +56,21 @@ export default function DashboardScreen() {
       icon: "send-plane-line",
       circleBg: colors.primaryContainer,
       iconColor: colors.primary,
-    }
+    },
   ] as const;
 
   return (
-    <View 
+    <View
       className="flex-1"
       style={{ backgroundColor: colors.primary }} // Deep brand travel blue outer backplate
     >
       <StatusBar style={mode === "light" ? "dark" : "light"} />
 
       {/* Premium Mockup Organic Header Navbar */}
-      <OrganicHeader
-        search={search}
-        onSearchChange={setSearch}
-      />
+      <OrganicHeader search={search} onSearchChange={setSearch} />
 
       {/* Main Screen Body Scroll Container with Curved sliding panel */}
-      <ScrollView 
+      <ScrollView
         className="flex-1"
         style={{
           backgroundColor: colors.background,
@@ -86,11 +83,11 @@ export default function DashboardScreen() {
       >
         {/* Page Title Dashboard & Plan New Trip Action Button */}
         <View className="px-6 mt-6 flex-row justify-between items-center">
-          <Text 
+          <Text
             className="text-2xl font-extrabold tracking-tight"
-            style={{ 
-              fontFamily: "Montserrat", 
-              color: colors.onBackground 
+            style={{
+              fontFamily: "Montserrat",
+              color: colors.onBackground,
             }}
           >
             Dashboard
@@ -110,8 +107,8 @@ export default function DashboardScreen() {
             activeOpacity={0.8}
           >
             <Icon name="add-line" size={16} color={colors.onSecondary} />
-            <Text 
-              className="text-xs font-bold" 
+            <Text
+              className="text-xs font-bold"
               style={{ fontFamily: "Montserrat", color: colors.onSecondary }}
             >
               Plan New Trip

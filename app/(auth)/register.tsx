@@ -10,13 +10,13 @@ export default function RegisterScreen() {
   const { colors, mode, rounded } = useTheme();
 
   return (
-    <View 
+    <View
       className="flex-1 justify-center items-center px-6"
       style={{ backgroundColor: colors.background }}
     >
       <StatusBar style={mode === "light" ? "dark" : "light"} />
-      
-      <View 
+
+      <View
         className="w-16 h-16 items-center justify-center mb-6"
         style={{
           borderRadius: rounded.full,
@@ -25,8 +25,8 @@ export default function RegisterScreen() {
       >
         <Icon name="user-add-fill" size={32} color={colors.primary} />
       </View>
-      
-      <Text 
+
+      <Text
         className="text-2xl font-extrabold mb-2"
         style={{
           fontFamily: "Montserrat",
@@ -35,8 +35,8 @@ export default function RegisterScreen() {
       >
         Create Account
       </Text>
-      
-      <Text 
+
+      <Text
         className="text-center mb-8 text-sm"
         style={{
           fontFamily: "Inter",
@@ -55,7 +55,7 @@ export default function RegisterScreen() {
         activeOpacity={0.85}
         onPress={() => navigation.back()}
       >
-        <Text 
+        <Text
           className="font-bold text-base"
           style={{
             fontFamily: "Montserrat",

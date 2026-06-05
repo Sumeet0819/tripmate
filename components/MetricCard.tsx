@@ -106,8 +106,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           styles.badge,
           {
             backgroundColor: isPositive
-              ? mode === "light" ? "#D1FAE5" : "#064E3B"
-              : mode === "light" ? "#FCE7F3" : "#4D1234",
+              ? mode === "light"
+                ? "#D1FAE5"
+                : "#064E3B"
+              : mode === "light"
+                ? "#FCE7F3"
+                : "#4D1234",
           },
         ]}
       >
@@ -116,8 +120,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
             styles.badgeText,
             {
               color: isPositive
-                ? mode === "light" ? "#065F46" : "#34D399"
-                : mode === "light" ? "#9D174D" : "#F472B6",
+                ? mode === "light"
+                  ? "#065F46"
+                  : "#34D399"
+                : mode === "light"
+                  ? "#9D174D"
+                  : "#F472B6",
             },
           ]}
         >
@@ -128,8 +136,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           size={10}
           color={
             isPositive
-              ? mode === "light" ? "#065F46" : "#34D399"
-              : mode === "light" ? "#9D174D" : "#F472B6"
+              ? mode === "light"
+                ? "#065F46"
+                : "#34D399"
+              : mode === "light"
+                ? "#9D174D"
+                : "#F472B6"
           }
         />
       </View>

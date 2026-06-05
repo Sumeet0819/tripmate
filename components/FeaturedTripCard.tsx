@@ -26,11 +26,7 @@ export const FeaturedTripCard: React.FC<FeaturedTripCardProps> = ({ trip }) => {
   return (
     <View style={[styles.featuredCard, { backgroundColor: colors.surface }]}>
       {/* Background Image */}
-      <Image 
-        source={{ uri: trip.image }} 
-        style={styles.featuredImage} 
-        resizeMode="cover"
-      />
+      <Image source={{ uri: trip.image }} style={styles.featuredImage} resizeMode="cover" />
       {/* Subtle overlay for balanced contrast */}
       <View style={styles.vignetteOverlay} />
 
@@ -61,12 +57,8 @@ export const FeaturedTripCard: React.FC<FeaturedTripCardProps> = ({ trip }) => {
 
         {/* Right column: Price & Slots */}
         <View style={styles.rightColumn}>
-          <Text style={styles.priceText}>
-            {trip.price}
-          </Text>
-          <Text style={styles.slotsText}>
-            {trip.slotsLeft}
-          </Text>
+          <Text style={styles.priceText}>{trip.price}</Text>
+          <Text style={styles.slotsText}>{trip.slotsLeft}</Text>
         </View>
       </View>
     </View>

@@ -64,9 +64,9 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
           activeOpacity={0.8}
           disabled={isFocused}
         >
-          <Icon 
-            name={mode === "light" ? "moon-fill" : "sun-fill"} 
-            size={22} 
+          <Icon
+            name={mode === "light" ? "moon-fill" : "sun-fill"}
+            size={22}
             color={colors.onSecondary} // High contrast themed icon color
           />
         </TouchableOpacity>
@@ -92,7 +92,7 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
         </MotiView>
 
         {/* Absolute Overlaid Components */}
-        
+
         {/* 1. Search Capsule Area */}
         <MotiView
           animate={{
@@ -108,18 +108,14 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
             stiffness: 150,
           }}
           style={[
-            styles.searchArea, 
-            { 
-              borderRadius: 24, 
-              zIndex: isFocused ? 99 : 1 
-            }
+            styles.searchArea,
+            {
+              borderRadius: 24,
+              zIndex: isFocused ? 99 : 1,
+            },
           ]}
         >
-          <Icon 
-            name="search-2-line" 
-            size={16} 
-            color={colors.onPrimaryContainer} 
-          />
+          <Icon name="search-2-line" size={16} color={colors.onPrimaryContainer} />
           <TextInput
             ref={searchInputRef}
             style={[styles.searchInput, { color: colors.onPrimaryContainer }]}
@@ -142,11 +138,7 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
               style={styles.clearButton}
               activeOpacity={0.7}
             >
-              <Icon 
-                name="close-line" 
-                size={16} 
-                color={colors.onPrimaryContainer} 
-              />
+              <Icon name="close-line" size={16} color={colors.onPrimaryContainer} />
             </TouchableOpacity>
           )}
         </MotiView>
@@ -165,17 +157,13 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
           pointerEvents={isFocused ? "none" : "auto"}
           style={styles.bellArea}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.iconContainer}
             activeOpacity={0.7}
             onPress={onNotificationPress}
             disabled={isFocused}
           >
-            <Icon 
-              name="notification-3-line" 
-              size={18} 
-              color={colors.onPrimaryContainer} 
-            />
+            <Icon name="notification-3-line" size={18} color={colors.onPrimaryContainer} />
             {/* Lime badge dot as shown in the premium mockup */}
             <View style={styles.limeBadgeDot} />
           </TouchableOpacity>
@@ -195,7 +183,7 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
           pointerEvents={isFocused ? "none" : "auto"}
           style={styles.avatarArea}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.avatarTouchable}
             activeOpacity={0.8}
             onPress={onProfilePress}

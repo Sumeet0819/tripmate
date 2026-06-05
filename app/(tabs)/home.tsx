@@ -73,37 +73,32 @@ const AVAILABLE_TRIPS = [
     category: "Heritage",
     image: "https://images.unsplash.com/photo-1600100397608-f010f423b971?w=400",
     isFeatured: false,
-  }
+  },
 ];
 
 export default function HomeScreen() {
   const { colors, mode } = useTheme();
   const [search, setSearch] = useState("");
 
-  const filteredTrips = AVAILABLE_TRIPS.filter(trip => 
-    trip.title.toLowerCase().includes(search.toLowerCase()) ||
-    trip.location.toLowerCase().includes(search.toLowerCase()) ||
-    trip.category.toLowerCase().includes(search.toLowerCase())
+  const filteredTrips = AVAILABLE_TRIPS.filter(
+    (trip) =>
+      trip.title.toLowerCase().includes(search.toLowerCase()) ||
+      trip.location.toLowerCase().includes(search.toLowerCase()) ||
+      trip.category.toLowerCase().includes(search.toLowerCase())
   );
 
-  const featuredTrips = filteredTrips.filter(t => t.isFeatured);
-  const regularTrips = filteredTrips.filter(t => !t.isFeatured);
+  const featuredTrips = filteredTrips.filter((t) => t.isFeatured);
+  const regularTrips = filteredTrips.filter((t) => !t.isFeatured);
 
   return (
-    <View 
-      className="flex-1"
-      style={{ backgroundColor: colors.primary }}
-    >
+    <View className="flex-1" style={{ backgroundColor: colors.primary }}>
       <StatusBar style={mode === "light" ? "dark" : "light"} />
 
       {/* Interactive Organic Search Header */}
-      <OrganicHeader
-        search={search}
-        onSearchChange={setSearch}
-      />
+      <OrganicHeader search={search} onSearchChange={setSearch} />
 
       {/* Main Discover Layout */}
-      <ScrollView 
+      <ScrollView
         className="flex-1"
         style={{
           backgroundColor: colors.background,
@@ -116,16 +111,16 @@ export default function HomeScreen() {
       >
         {/* Page Main Header */}
         <View className="px-6 mt-6">
-          <Text 
+          <Text
             className="text-2xl font-extrabold tracking-tight"
-            style={{ 
-              fontFamily: "Montserrat", 
-              color: colors.onBackground 
+            style={{
+              fontFamily: "Montserrat",
+              color: colors.onBackground,
             }}
           >
             Explore Journeys
           </Text>
-          <Text 
+          <Text
             style={{
               fontFamily: "Inter",
               color: colors.onSurfaceVariant,
@@ -141,29 +136,29 @@ export default function HomeScreen() {
         {featuredTrips.length > 0 && (
           <View style={styles.featuredSection}>
             <View className="px-6 flex-row justify-between items-center mb-4">
-              <Text 
-                style={{ 
-                  fontFamily: "Montserrat", 
+              <Text
+                style={{
+                  fontFamily: "Montserrat",
                   color: colors.onBackground,
                   fontSize: 16,
-                  fontWeight: "800"
+                  fontWeight: "800",
                 }}
               >
                 Featured Expeditions
               </Text>
-              <Text 
-                style={{ 
-                  fontFamily: "Inter", 
+              <Text
+                style={{
+                  fontFamily: "Inter",
                   color: colors.secondary,
                   fontSize: 12,
-                  fontWeight: "700"
+                  fontWeight: "700",
                 }}
               >
                 See All
               </Text>
             </View>
 
-            <ScrollView 
+            <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
@@ -177,9 +172,9 @@ export default function HomeScreen() {
 
         {/* ALL TRIPS: Vertical List Section */}
         <View className="px-6 mt-8">
-          <Text 
-            style={{ 
-              fontFamily: "Montserrat", 
+          <Text
+            style={{
+              fontFamily: "Montserrat",
               color: colors.onBackground,
               fontSize: 16,
               fontWeight: "800",
@@ -199,9 +194,9 @@ export default function HomeScreen() {
           ) : (
             <View style={{ gap: 16 }}>
               {regularTrips.concat(search ? featuredTrips : []).map((trip) => (
-                <TripCard 
-                  key={trip.id} 
-                  trip={trip} 
+                <TripCard
+                  key={trip.id}
+                  trip={trip}
                   onJoinPress={() => console.log("Joined:", trip.title)}
                 />
               ))}
@@ -228,5 +223,5 @@ const styles = StyleSheet.create({
     fontFamily: "Inter",
     fontSize: 13,
     fontWeight: "600",
-  }
+  },
 });
