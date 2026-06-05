@@ -47,5 +47,11 @@ router.get(
   authMiddleware,
   authController.getMe
 );
+// Protected: Developer utility to promote oneself to a provider for testing
+router.post(
+  "/promote",
+  authMiddleware,
+  authController.promoteToProvider
+);
 
 module.exports = router;

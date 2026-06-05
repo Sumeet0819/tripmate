@@ -178,17 +178,53 @@ exports.verifyOtp = async (req, res, next) => {
     // Consume the OTP — delete it so it cannot be reused
     await supabase.from("otps").delete().eq("id", otpRecord.id);
 
-    // Upsert the user profile (create if first login, skip if returning user)
-    const { data: user, error: userError } = await supabase
-      .from("users")
-      .upsert(
-        { email, name: email.split("@")[0] }, // Minimal profile for OTP users
-        { onConflict: "email", ignoreDuplicates: true }
-      )
-      .select()
-      .single();
+    // ------------------------------------------------------------------
+    // Resolve the user's UUID from auth.users
+    //
+    // public.users.id is a FK → auth.users.id (ON DELETE CASCADE).
+    // We cannot insert into public.users without a matching UUID in auth.users.
+    //
+    // Strategy:
+    //  1. Check if a public.users row already exists for this email (returning user).
+    //  2. If not, create a new user in auth.users via the admin API — this gives
+    //     us a real UUID that satisfies the FK constraint.
+    // ------------------------------------------------------------------
 
-    if (userError) throw userError;
+    // Step 1: Check for returning OTP user
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select("id, email, name, role")
+      .eq("email", email)
+      .maybeSingle();
+
+    let user;
+
+    if (existingUser) {
+      // Returning user — skip upsert and use existing profile
+      user = existingUser;
+    } else {
+      // New user — create in auth.users first to obtain a valid UUID
+      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+        email,
+        email_confirm: true, // Mark as confirmed since they passed OTP verification
+      });
+
+      if (authError) throw authError;
+      const userId = authData.user.id;
+
+      // Upsert into public.users with the new UUID
+      const { data: newUser, error: userError } = await supabase
+        .from("users")
+        .upsert(
+          { id: userId, email, name: email.split("@")[0] },
+          { onConflict: "email", ignoreDuplicates: true }
+        )
+        .select()
+        .single();
+
+      if (userError) throw userError;
+      user = newUser;
+    }
 
     // Issue a signed JWT for the mobile app session
     // This token mimics the shape of a Supabase JWT for compatibility with auth middleware
@@ -241,6 +277,55 @@ exports.getMe = async (req, res, next) => {
     }
 
     res.status(200).json({ status: "success", user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ---------------------------------------------------------------------------
+// 5. Developer / Testing Utility
+// ---------------------------------------------------------------------------
+
+/**
+ * POST /api/v1/auth/promote
+ * 
+ * Promotes the currently authenticated user to the 'provider' role.
+ * This is incredibly useful for testing the Trip creation APIs without
+ * having to manually edit the Supabase database.
+ * 
+ * Returns a FRESH token with the new role baked in.
+ */
+exports.promoteToProvider = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    // Update role in DB
+    const { data: user, error } = await supabase
+      .from("users")
+      .update({ role: "provider" })
+      .eq("id", userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // Issue a fresh token so they don't have to log in again
+    const token = jwt.sign(
+      {
+        sub: user.id,
+        email: user.email,
+        user_metadata: { role: user.role },
+      },
+      process.env.SUPABASE_JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "Successfully promoted to provider!",
+      token,
+      user
+    });
   } catch (err) {
     next(err);
   }
