@@ -1,94 +1,48 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useTheme } from "../../utils/theme";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-remix-icon";
 import { OrganicHeader } from "../../components/OrganicHeader";
 import { FeaturedTripCard } from "../../components/FeaturedTripCard";
 import { TripCard } from "../../components/TripCard";
-
-const AVAILABLE_TRIPS = [
-  {
-    id: "featured-1",
-    title: "Ladakh Bike Expedition",
-    location: "Leh-Ladakh, India",
-    duration: "9 Days",
-    price: "₹34,500",
-    slotsLeft: "3 slots left",
-    category: "Adventure",
-    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400",
-    isFeatured: true,
-  },
-  {
-    id: "featured-2",
-    title: "Kerala Backwaters Cruise",
-    location: "Alleppey, Kerala",
-    duration: "5 Days",
-    price: "₹18,200",
-    slotsLeft: "6 slots left",
-    category: "Leisure",
-    image: "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=400",
-    isFeatured: true,
-  },
-  {
-    id: "trip-3",
-    title: "Jaipur Forts & Heritage",
-    location: "Jaipur, Rajasthan",
-    duration: "3 Days",
-    price: "₹9,800",
-    slotsLeft: "8 slots left",
-    category: "Heritage",
-    image: "https://images.unsplash.com/photo-1477587458883-47135acdb7ae?w=400",
-    isFeatured: false,
-  },
-  {
-    id: "trip-4",
-    title: "Goa Watersports & Beach",
-    location: "Calangute, Goa",
-    duration: "4 Days",
-    price: "₹12,400",
-    slotsLeft: "2 slots left",
-    category: "Beach",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400",
-    isFeatured: false,
-  },
-  {
-    id: "trip-5",
-    title: "Valley of Flowers Trek",
-    location: "Chamoli, Uttarakhand",
-    duration: "7 Days",
-    price: "₹22,100",
-    slotsLeft: "Fully Booked",
-    category: "Trekking",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400",
-    isFeatured: false,
-  },
-  {
-    id: "trip-6",
-    title: "Hampi Ruins Exploration",
-    location: "Hampi, Karnataka",
-    duration: "3 Days",
-    price: "₹8,500",
-    slotsLeft: "11 slots left",
-    category: "Heritage",
-    image: "https://images.unsplash.com/photo-1600100397608-f010f423b971?w=400",
-    isFeatured: false,
-  },
-];
+import { useAppDispatch, useAppSelector } from "../../src/store/hooks";
+import { fetchTrips, Trip } from "../../src/store/slices/tripsSlice";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
   const { colors, mode } = useTheme();
   const [search, setSearch] = useState("");
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  
+  const { items: trips, status } = useAppSelector((state) => state.trips);
 
-  const filteredTrips = AVAILABLE_TRIPS.filter(
+  useEffect(() => {
+    dispatch(fetchTrips({}));
+  }, [dispatch]);
+
+  const mapTripToCardData = (trip: Trip) => ({
+    id: trip.id,
+    title: trip.title,
+    location: trip.location,
+    duration: `${trip.duration} Days`,
+    price: `₹${trip.price.toLocaleString("en-IN")}`,
+    slotsLeft: trip.slots_left === 0 ? "Fully Booked" : `${trip.slots_left} slots left`,
+    category: trip.category,
+    image: trip.image_url,
+    isFeatured: trip.is_featured,
+  });
+
+  const filteredTrips = trips.filter(
     (trip) =>
       trip.title.toLowerCase().includes(search.toLowerCase()) ||
       trip.location.toLowerCase().includes(search.toLowerCase()) ||
       trip.category.toLowerCase().includes(search.toLowerCase())
   );
 
-  const featuredTrips = filteredTrips.filter((t) => t.isFeatured);
-  const regularTrips = filteredTrips.filter((t) => !t.isFeatured);
+  const featuredTrips = filteredTrips.filter((t) => t.is_featured).map(mapTripToCardData);
+  const regularTrips = filteredTrips.filter((t) => !t.is_featured).map(mapTripToCardData);
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.primary }}>
@@ -164,7 +118,13 @@ export default function HomeScreen() {
               contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
             >
               {featuredTrips.map((trip) => (
-                <FeaturedTripCard key={trip.id} trip={trip} />
+                <TouchableOpacity 
+                  key={trip.id} 
+                  activeOpacity={0.9} 
+                  onPress={() => router.push(`/trip/${trip.id}` as any)}
+                >
+                  <FeaturedTripCard trip={trip} />
+                </TouchableOpacity>
               ))}
             </ScrollView>
           </View>
@@ -191,14 +151,23 @@ export default function HomeScreen() {
                 No trips matching your search
               </Text>
             </View>
+          ) : status === "loading" && trips.length === 0 ? (
+            <View style={{ paddingVertical: 40, alignItems: 'center' }}>
+              <ActivityIndicator size="large" color={colors.primary} />
+            </View>
           ) : (
             <View style={{ gap: 16 }}>
               {regularTrips.concat(search ? featuredTrips : []).map((trip) => (
-                <TripCard
+                <TouchableOpacity
                   key={trip.id}
-                  trip={trip}
-                  onJoinPress={() => console.log("Joined:", trip.title)}
-                />
+                  activeOpacity={0.95}
+                  onPress={() => router.push(`/trip/${trip.id}` as any)}
+                >
+                  <TripCard
+                    trip={trip}
+                    onJoinPress={() => router.push(`/trip/${trip.id}` as any)}
+                  />
+                </TouchableOpacity>
               ))}
             </View>
           )}

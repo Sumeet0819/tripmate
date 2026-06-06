@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
+import tripsReducer from './slices/tripsSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    // Add other reducers here as you build them (trips, platoons, etc)
+    trips: tripsReducer,
+    // Add other reducers here as you build them (platoons, etc)
   },
   // Middleware can be configured here if needed
 });

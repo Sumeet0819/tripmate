@@ -1,9 +1,10 @@
 import React, { useState, useRef } from "react";
-import { Image, StyleSheet, TextInput, TouchableOpacity, View, Dimensions } from "react-native";
+import { Image, StyleSheet, TextInput, TouchableOpacity, View, Dimensions, Text } from "react-native";
 import Icon from "react-native-remix-icon";
 import Svg, { Path } from "react-native-svg";
 import { useTheme } from "../utils/theme";
 import { MotiView } from "moti";
+import { useAppSelector } from "../src/store/hooks";
 
 // Organic Connected Blob SVG Background
 const OrganicPillBackground = ({ color }: { color: string }) => (
@@ -31,10 +32,33 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
   const { colors, mode, rounded, toggleTheme } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const searchInputRef = useRef<TextInput>(null);
+  
+  // Fetch user from Redux store
+  const user = useAppSelector((state) => state.auth.user);
 
   const screenWidth = Dimensions.get("window").width;
   const AVAILABLE_WIDTH = screenWidth - 48; // 24 padding on each side
   const CONTAINER_LEFT = AVAILABLE_WIDTH - 280; // Distance from left edge of content to connectedContainer
+
+  const renderAvatar = () => {
+    if (user?.avatar_url) {
+      return (
+        <Image
+          source={{ uri: user.avatar_url }}
+          style={styles.avatarImage}
+          resizeMode="cover"
+        />
+      );
+    }
+    
+    // Fallback Initials
+    const initial = user?.name ? user.name.charAt(0).toUpperCase() : "U";
+    return (
+      <View style={[styles.avatarImage, { backgroundColor: colors.secondary, alignItems: 'center', justifyContent: 'center' }]}>
+        <Text style={{ color: colors.onSecondary, fontWeight: 'bold', fontSize: 16 }}>{initial}</Text>
+      </View>
+    );
+  };
 
   return (
     <View style={[styles.headerBar, { backgroundColor: colors.primary }]}>
@@ -189,11 +213,7 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
             onPress={onProfilePress}
             disabled={isFocused}
           >
-            <Image
-              source={{ uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" }}
-              style={styles.avatarImage}
-              resizeMode="cover"
-            />
+            {renderAvatar()}
           </TouchableOpacity>
         </MotiView>
       </View>
