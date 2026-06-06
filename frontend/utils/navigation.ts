@@ -25,8 +25,8 @@ export function useAppNavigation() {
   const navigation = useNavigation<any>();
 
   return {
-    navigate: (route: RouteType) => {
-      navigation.navigate(route);
+    navigate: (route: RouteType | string, params?: any) => {
+      navigation.navigate(route, params);
     },
     push: (route: RouteType) => {
       if (typeof navigation.push === "function") {

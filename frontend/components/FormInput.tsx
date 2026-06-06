@@ -12,6 +12,7 @@ interface FormInputProps {
   secureTextEntry?: boolean;
   keyboardType?: KeyboardTypeOptions;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
+  maxLength?: number;
 }
 
 export const FormInput: React.FC<FormInputProps> = ({
@@ -23,6 +24,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   secureTextEntry = false,
   keyboardType = "default",
   autoCapitalize = "none",
+  maxLength,
 }) => {
   const { colors, rounded } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
@@ -56,6 +58,7 @@ export const FormInput: React.FC<FormInputProps> = ({
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
+          maxLength={maxLength}
           autoCorrect={false}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
