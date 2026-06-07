@@ -7,14 +7,21 @@ import { MotiView } from "moti";
 import { useAppSelector } from "../src/store/hooks";
 
 // Organic Connected Blob SVG Background
-const OrganicPillBackground = ({ color }: { color: string }) => (
-  <Svg width={280} height={48} viewBox="0 0 280 48">
-    <Path
-      d="M 24,0 L 110,0 C 122,0 125,12 135,12 C 145,12 148,0 160,0 L 190,0 C 202,0 205,12 215,12 C 225,12 228,0 240,0 L 256,0 A 24,24 0 0,1 280,24 A 24,24 0 0,1 256,48 L 240,48 C 228,48 225,36 215,36 C 205,36 202,48 190,48 L 160,48 C 148,48 145,36 135,36 C 125,36 122,48 110,48 L 24,48 A 24,24 0 0,1 0,24 A 24,24 0 0,1 24,0 Z"
-      fill={color}
-    />
-  </Svg>
-);
+const OrganicPillBackground = ({ color, width }: { color: string; width: number }) => {
+  const AvatarCenter = width - 24;
+  const BellCenter = width - 105;
+  const SearchEnd = width - 186;
+
+  const safeSearchEnd = Math.max(24, SearchEnd);
+
+  const path = `M 24,0 L ${safeSearchEnd},0 C ${safeSearchEnd + 20},0 ${safeSearchEnd + 20},16 ${safeSearchEnd + 40.5},16 C ${BellCenter - 20},16 ${BellCenter - 20},0 ${BellCenter},0 C ${BellCenter + 20},0 ${BellCenter + 20},16 ${BellCenter + 40.5},16 C ${AvatarCenter - 20},16 ${AvatarCenter - 20},0 ${AvatarCenter},0 A 24,24 0 0,1 ${width},24 A 24,24 0 0,1 ${AvatarCenter},48 C ${AvatarCenter - 20},48 ${AvatarCenter - 20},32 ${BellCenter + 40.5},32 C ${BellCenter + 20},32 ${BellCenter + 20},48 ${BellCenter},48 C ${BellCenter - 20},48 ${BellCenter - 20},32 ${safeSearchEnd + 40.5},32 C ${safeSearchEnd + 20},32 ${safeSearchEnd + 20},48 ${safeSearchEnd},48 L 24,48 A 24,24 0 0,1 0,24 A 24,24 0 0,1 24,0 Z`;
+
+  return (
+    <Svg width={width} height={48} viewBox={`0 0 ${width} 48`}>
+      <Path d={path} fill={color} />
+    </Svg>
+  );
+};
 
 interface OrganicHeaderProps {
   search: string;
@@ -29,7 +36,7 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
   onNotificationPress,
   onProfilePress,
 }) => {
-  const { colors, mode, rounded, toggleTheme } = useTheme();
+  const { colors } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const searchInputRef = useRef<TextInput>(null);
   
@@ -38,7 +45,6 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
 
   const screenWidth = Dimensions.get("window").width;
   const AVAILABLE_WIDTH = screenWidth - 48; // 24 padding on each side
-  const CONTAINER_LEFT = AVAILABLE_WIDTH - 280; // Distance from left edge of content to connectedContainer
 
   const renderAvatar = () => {
     if (user?.avatar_url) {
@@ -62,42 +68,9 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
 
   return (
     <View style={[styles.headerBar, { backgroundColor: colors.primary }]}>
-      {/* Left Dynamic Theme Toggle Button */}
-      <MotiView
-        animate={{
-          opacity: isFocused ? 0 : 1,
-          scale: isFocused ? 0.8 : 1,
-        }}
-        transition={
-          isFocused
-            ? { type: "timing", duration: 50 }
-            : { type: "spring", damping: 15, stiffness: 180 }
-        }
-        pointerEvents={isFocused ? "none" : "auto"}
-        style={styles.toggleButtonContainer}
-      >
-        <TouchableOpacity
-          onPress={toggleTheme}
-          style={[
-            styles.toggleButton,
-            {
-              borderRadius: rounded.full,
-              backgroundColor: colors.secondary, // Dynamic themed brand accent
-            },
-          ]}
-          activeOpacity={0.8}
-          disabled={isFocused}
-        >
-          <Icon
-            name={mode === "light" ? "moon-fill" : "sun-fill"}
-            size={22}
-            color={colors.onSecondary} // High contrast themed icon color
-          />
-        </TouchableOpacity>
-      </MotiView>
 
       {/* Right Fluid Connected Pill Container */}
-      <View style={styles.connectedContainer}>
+      <View style={[styles.connectedContainer, { width: AVAILABLE_WIDTH }]}>
         {/* Organic Connected Blob SVG Background */}
         <MotiView
           animate={{
@@ -107,12 +80,12 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
           transition={
             isFocused
               ? { type: "timing", duration: 50 }
-              : { type: "spring", damping: 15, stiffness: 180 }
+              : { type: "timing", duration: 250 }
           }
           pointerEvents="none"
           style={{ position: "absolute", left: 0, top: 0, right: 0, bottom: 0 }}
         >
-          <OrganicPillBackground color={colors.primaryContainer} />
+          <OrganicPillBackground color={colors.surface} width={AVAILABLE_WIDTH} />
         </MotiView>
 
         {/* Absolute Overlaid Components */}
@@ -120,17 +93,16 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
         {/* 1. Search Capsule Area */}
         <MotiView
           animate={{
-            left: isFocused ? -CONTAINER_LEFT : 12,
-            width: isFocused ? AVAILABLE_WIDTH : 110,
+            left: isFocused ? 0 : 12,
+            width: isFocused ? AVAILABLE_WIDTH : AVAILABLE_WIDTH - 170,
             paddingLeft: isFocused ? 16 : 0,
-            backgroundColor: isFocused ? colors.primaryContainer : colors.primaryContainer + "00",
+            backgroundColor: isFocused ? colors.surface : colors.surface + "00",
           }}
-          transition={{
-            type: "spring",
-            damping: 25,
-            mass: 0.8,
-            stiffness: 150,
-          }}
+          transition={
+            isFocused
+              ? { type: "spring", damping: 25, mass: 0.8, stiffness: 150 }
+              : { type: "timing", duration: 250 }
+          }
           style={[
             styles.searchArea,
             {
@@ -139,12 +111,12 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
             },
           ]}
         >
-          <Icon name="search-2-line" size={16} color={colors.onPrimaryContainer} />
+          <Icon name="search-2-line" size={16} color={colors.secondary} />
           <TextInput
             ref={searchInputRef}
-            style={[styles.searchInput, { color: colors.onPrimaryContainer }]}
+            style={[styles.searchInput, { color: colors.secondary }]}
             placeholder="SEARCH"
-            placeholderTextColor={colors.onPrimaryContainer + "B0"}
+            placeholderTextColor={colors.secondary + "B0"}
             value={search}
             onChangeText={onSearchChange}
             onFocus={() => setIsFocused(true)}
@@ -162,7 +134,7 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
               style={styles.clearButton}
               activeOpacity={0.7}
             >
-              <Icon name="close-line" size={16} color={colors.onPrimaryContainer} />
+              <Icon name="close-line" size={16} color={colors.secondary} />
             </TouchableOpacity>
           )}
         </MotiView>
@@ -176,10 +148,10 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
           transition={
             isFocused
               ? { type: "timing", duration: 50 }
-              : { type: "spring", damping: 15, stiffness: 180 }
+              : { type: "timing", duration: 250 }
           }
           pointerEvents={isFocused ? "none" : "auto"}
-          style={styles.bellArea}
+          style={[styles.bellArea, { left: AVAILABLE_WIDTH - 123 }]}
         >
           <TouchableOpacity
             style={styles.iconContainer}
@@ -187,7 +159,7 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
             onPress={onNotificationPress}
             disabled={isFocused}
           >
-            <Icon name="notification-3-line" size={18} color={colors.onPrimaryContainer} />
+            <Icon name="notification-3-line" size={18} color={colors.secondary} />
             {/* Lime badge dot as shown in the premium mockup */}
             <View style={styles.limeBadgeDot} />
           </TouchableOpacity>
@@ -202,10 +174,10 @@ export const OrganicHeader: React.FC<OrganicHeaderProps> = ({
           transition={
             isFocused
               ? { type: "timing", duration: 50 }
-              : { type: "spring", damping: 15, stiffness: 180 }
+              : { type: "timing", duration: 250 }
           }
           pointerEvents={isFocused ? "none" : "auto"}
-          style={styles.avatarArea}
+          style={[styles.avatarArea, { left: AVAILABLE_WIDTH - 42 }]}
         >
           <TouchableOpacity
             style={styles.avatarTouchable}
@@ -227,7 +199,7 @@ const styles = StyleSheet.create({
     paddingTop: 64,
     paddingBottom: 24,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: "transparent",
   },
@@ -242,15 +214,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   connectedContainer: {
-    width: 280,
     height: 48,
     position: "relative",
   },
   searchArea: {
     position: "absolute",
-    left: 12,
     top: 0,
-    width: 110,
     height: 48,
     flexDirection: "row",
     alignItems: "center",
@@ -275,7 +244,6 @@ const styles = StyleSheet.create({
   },
   bellArea: {
     position: "absolute",
-    left: 157, // Center is 175. 175 - 18 = 157
     top: 6, // 24 - 18 = 6
     width: 36,
     height: 36,
@@ -299,14 +267,13 @@ const styles = StyleSheet.create({
   },
   avatarArea: {
     position: "absolute",
-    left: 238, // Center is 256. 256 - 18 = 238
     top: 6, // 24 - 18 = 6
     width: 36,
     height: 36,
     borderRadius: 18,
     overflow: "hidden",
     borderWidth: 2,
-    borderColor: "#A6F16D", // Signature Lime outline from mockup
+    // borderColor: "#A6F16D", // Signature Lime outline from mockup
   },
   avatarTouchable: {
     width: "100%",

@@ -6,9 +6,11 @@ import Icon from "react-native-remix-icon";
 import { OrganicHeader } from "../../components/OrganicHeader";
 import { MetricCard } from "../../components/MetricCard";
 import { AnalyticsChartCard } from "../../components/AnalyticsChartCard";
+import { useRouter } from "expo-router";
 
 export default function DashboardScreen() {
   const { colors, mode } = useTheme();
+  const router = useRouter();
   const [search, setSearch] = useState("");
 
   // Grid Summary Metrics mapped from travel planner content
@@ -67,7 +69,7 @@ export default function DashboardScreen() {
       <StatusBar style={mode === "light" ? "dark" : "light"} />
 
       {/* Premium Mockup Organic Header Navbar */}
-      <OrganicHeader search={search} onSearchChange={setSearch} />
+      <OrganicHeader search={search} onSearchChange={setSearch} onProfilePress={() => router.push('/profile' as any)} />
 
       {/* Main Screen Body Scroll Container with Curved sliding panel */}
       <ScrollView

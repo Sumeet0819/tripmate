@@ -1,81 +1,82 @@
 import React, { createContext, useContext, useState } from "react";
+import { useColorScheme } from "react-native";
 
 // Ported exactly from DESIGN (3).md
 export const LIGHT_COLORS = {
-  surface: "#ffffff",
-  surfaceDim: "#e8ecef",
-  surfaceBright: "#ffffff",
-  surfaceContainerLowest: "#ffffff",
-  surfaceContainerLow: "#f4f6f9",
-  surfaceContainer: "#e8ecef",
-  surfaceContainerHigh: "#dce2e7",
-  surfaceContainerHighest: "#d0d8df",
-  onSurface: "#121214",
-  onSurfaceVariant: "#5e6573",
-  inverseSurface: "#121214",
-  inverseOnSurface: "#ffffff",
-  outline: "#d0d8df",
-  outlineVariant: "#bcc6cf",
-  surfaceTint: "#1a73e8",
-  primary: "#1a73e8", // Vibrant Travel Blue
-  onPrimary: "#ffffff",
-  primaryContainer: "#e3f2fd", // Soft blue container
-  onPrimaryContainer: "#0d47a1",
-  inversePrimary: "#90caf9",
-  secondary: "#e05a2b", // Premium Suitcase Orange
-  onSecondary: "#ffffff",
-  secondaryContainer: "#ffebe5",
-  onSecondaryContainer: "#c43c00",
-  tertiary: "#13677b", // Sea Teal
-  onTertiary: "#ffffff",
-  tertiaryContainer: "#a1e7ff",
-  onTertiaryContainer: "#18697e",
+  surface: "#FFFFFF", // White
+  surfaceDim: "#EBEEF2", // Light Gray
+  surfaceBright: "#FFFFFF",
+  surfaceContainerLowest: "#FFFFFF",
+  surfaceContainerLow: "#EBEEF2",
+  surfaceContainer: "#EBEEF2",
+  surfaceContainerHigh: "#d1d5db",
+  surfaceContainerHighest: "#6B7077", // Gray
+  onSurface: "#2A3544", // Dark Blue
+  onSurfaceVariant: "#6B7077", // Gray
+  inverseSurface: "#2A3544",
+  inverseOnSurface: "#FFFFFF",
+  outline: "#6B7077", // Gray
+  outlineVariant: "#EBEEF2",
+  surfaceTint: "#1E47D1", // Bright Blue
+  primary: "#1E47D1", 
+  onPrimary: "#FFFFFF",
+  primaryContainer: "#e0e7ff",
+  onPrimaryContainer: "#0f2368",
+  inversePrimary: "#8ea5e8",
+  secondary: "#2A3544", // Dark Blue
+  onSecondary: "#FFFFFF",
+  secondaryContainer: "#EBEEF2", // Light Gray
+  onSecondaryContainer: "#2A3544",
+  tertiary: "#6B7077", // Gray
+  onTertiary: "#FFFFFF",
+  tertiaryContainer: "#e5e8eb",
+  onTertiaryContainer: "#2A3544",
   error: "#ba1a1a",
   onError: "#ffffff",
   errorContainer: "#ffdad6",
   onErrorContainer: "#93000a",
-  background: "#f4f6f9",
-  onBackground: "#121214",
-  surfaceVariant: "#e8ecef",
+  background: "#EBEEF2", // Light Gray
+  onBackground: "#2A3544", // Dark Blue
+  surfaceVariant: "#EBEEF2",
 };
 
 // Beautiful dark palette tailored to match the "Vibrant Bharat Explorer" theme
 export const DARK_COLORS = {
-  surface: "#181a1f",
-  surfaceDim: "#121317",
-  surfaceBright: "#22252c",
-  surfaceContainerLowest: "#0b0c0e",
-  surfaceContainerLow: "#14161b",
-  surfaceContainer: "#1a1d23",
-  surfaceContainerHigh: "#20242b",
-  surfaceContainerHighest: "#2c313b",
-  onSurface: "#ffffff",
-  onSurfaceVariant: "#8c93a3",
-  inverseSurface: "#ffffff",
-  inverseOnSurface: "#121214",
-  outline: "#2c313b",
-  outlineVariant: "#3d4452",
-  surfaceTint: "#1a73e8",
-  primary: "#1a73e8", // Vibrant Travel Blue
-  onPrimary: "#ffffff",
-  primaryContainer: "#1e2024", // Clean input card background
-  onPrimaryContainer: "#ffffff",
-  inversePrimary: "#1a73e8",
-  secondary: "#e05a2b", // Premium Suitcase Orange
-  onSecondary: "#ffffff",
-  secondaryContainer: "#2c313b",
-  onSecondaryContainer: "#ffffff",
-  tertiary: "#8bd1e8",
-  onTertiary: "#003541",
-  tertiaryContainer: "#13677b",
-  onTertiaryContainer: "#b2ebff",
+  surface: "#2A3544", // Dark Blue
+  surfaceDim: "#1f2732",
+  surfaceBright: "#354255",
+  surfaceContainerLowest: "#151a22",
+  surfaceContainerLow: "#2A3544",
+  surfaceContainer: "#354255",
+  surfaceContainerHigh: "#46566d",
+  surfaceContainerHighest: "#6B7077", // Gray
+  onSurface: "#FFFFFF", // White
+  onSurfaceVariant: "#EBEEF2", // Light Gray
+  inverseSurface: "#FFFFFF",
+  inverseOnSurface: "#2A3544", // Dark Blue
+  outline: "#6B7077", // Gray
+  outlineVariant: "#46566d",
+  surfaceTint: "#1E47D1", // Bright Blue
+  primary: "#1E47D1", 
+  onPrimary: "#FFFFFF",
+  primaryContainer: "#0f2368", 
+  onPrimaryContainer: "#e0e7ff",
+  inversePrimary: "#1E47D1",
+  secondary: "#EBEEF2", // Light Gray
+  onSecondary: "#2A3544", // Dark Blue
+  secondaryContainer: "#354255",
+  onSecondaryContainer: "#FFFFFF",
+  tertiary: "#6B7077", // Gray
+  onTertiary: "#2A3544",
+  tertiaryContainer: "#354255",
+  onTertiaryContainer: "#EBEEF2",
   error: "#ffb4ab",
   onError: "#690005",
   errorContainer: "#93000a",
   onErrorContainer: "#ffdad6",
-  background: "#0e1013", // Deep dark background
-  onBackground: "#ffffff",
-  surfaceVariant: "#2c313b",
+  background: "#1f2732", // Darker blue background
+  onBackground: "#FFFFFF", // White
+  surfaceVariant: "#354255",
 };
 
 export const SPACING = {
@@ -157,31 +158,38 @@ export const TYPOGRAPHY = {
   },
 };
 
+export type ThemePreference = "light" | "dark" | "system";
+
 type ThemeContextType = {
-  mode: "light" | "dark";
+  mode: "light" | "dark"; // The actual active mode
+  themePreference: ThemePreference; // The user's preference
   colors: typeof LIGHT_COLORS;
   spacing: typeof SPACING;
   rounded: typeof ROUNDED;
   typography: typeof TYPOGRAPHY;
-  toggleTheme: () => void;
+  setThemePreference: (pref: ThemePreference) => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [mode, setMode] = useState<"light" | "dark">("light");
+  const systemColorScheme = useColorScheme();
+  const [themePreference, setThemePreference] = useState<ThemePreference>("light"); // Default to light
 
-  const toggleTheme = () => {
-    setMode((prev) => (prev === "light" ? "dark" : "light"));
-  };
+  // Determine active mode
+  const activeMode: "light" | "dark" = 
+    themePreference === "system" 
+      ? (systemColorScheme === "dark" ? "dark" : "light")
+      : themePreference;
 
   const themeValue: ThemeContextType = {
-    mode,
-    colors: mode === "light" ? LIGHT_COLORS : DARK_COLORS,
+    mode: activeMode,
+    themePreference,
+    colors: activeMode === "light" ? LIGHT_COLORS : DARK_COLORS,
     spacing: SPACING,
     rounded: ROUNDED,
     typography: TYPOGRAPHY,
-    toggleTheme,
+    setThemePreference,
   };
 
   return <ThemeContext.Provider value={themeValue}>{children}</ThemeContext.Provider>;

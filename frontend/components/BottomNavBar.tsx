@@ -13,10 +13,18 @@ interface BottomNavBarProps {
 export const BottomNavBar: React.FC<BottomNavBarProps> = ({ state, descriptors, navigation }) => {
   const { colors } = useTheme();
 
+  // Hide the bottom nav bar completely on specific screens
+  const currentRouteName = state.routes[state.index].name;
+  if (currentRouteName === "profile") {
+    return null;
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: colors.primary }]}>
       {state.routes.map((route: any, index: number) => {
         const { options } = descriptors[route.key];
+        if (options.href === null) return null;
+        
         const label =
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
@@ -50,9 +58,6 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ state, descriptors, 
         } else if (route.name === "platoons") {
           iconFocused = "team-fill";
           iconUnfocused = "team-line";
-        } else if (route.name === "profile") {
-          iconFocused = "user-fill";
-          iconUnfocused = "user-line";
         }
 
         return (
@@ -60,7 +65,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ state, descriptors, 
             <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={styles.touchable}>
               <MotiView
                 animate={{
-                  backgroundColor: isFocused ? colors.primaryContainer : "transparent",
+                  backgroundColor: isFocused ? colors.surface : "transparent",
                   paddingHorizontal: isFocused ? 12 : 0,
                   width: isFocused ? 110 : 40,
                 }}
@@ -75,7 +80,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ state, descriptors, 
                 <Icon
                   name={(isFocused ? iconFocused : iconUnfocused) as any}
                   size={18}
-                  color={isFocused ? colors.onPrimaryContainer : colors.onPrimary + "B0"}
+                  color={isFocused ? colors.secondary : colors.onPrimary + "B0"}
                 />
 
                 {isFocused && (
@@ -88,7 +93,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ state, descriptors, 
                       mass: 0.8,
                       stiffness: 160,
                     }}
-                    style={[styles.activeText, { color: colors.onPrimaryContainer }]}
+                    style={[styles.activeText, { color: colors.secondary }]}
                     numberOfLines={1}
                   >
                     {label.toString().toUpperCase()}

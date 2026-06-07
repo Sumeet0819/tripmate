@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from "react-native";
-import { useTheme } from "../../utils/theme";
+import { useTheme, ThemePreference } from "../../utils/theme";
 import { useAppSelector, useAppDispatch } from "../../src/store/hooks";
 import { logout } from "../../src/store/slices/authSlice";
 import { PillButton } from "../../components/PillButton";
@@ -8,9 +8,16 @@ import Icon from "react-native-remix-icon";
 import { StatusBar } from "expo-status-bar";
 
 export default function ProfileScreen() {
-  const { colors, mode, rounded } = useTheme();
+  const { colors, mode, rounded, themePreference, setThemePreference } = useTheme();
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
+  
+  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
+  const themeOptions: { label: string; value: ThemePreference; icon: string }[] = [
+    { label: "Light Theme", value: "light", icon: "sun-fill" },
+    { label: "Dark Theme", value: "dark", icon: "moon-fill" },
+    { label: "System Default", value: "system", icon: "settings-3-line" },
+  ];
 
   const handleLogout = () => {
     Alert.alert(
@@ -119,6 +126,58 @@ export default function ProfileScreen() {
             <Text style={{ flex: 1, fontFamily: "Inter", fontSize: 15, fontWeight: "600", color: colors.onBackground }}>Privacy & Security</Text>
             <Icon name="arrow-right-s-line" size={20} color={colors.onSurfaceVariant} />
           </TouchableOpacity>
+
+          {/* Theme Selector Dropdown */}
+          <View style={{ marginBottom: 16 }}>
+            <TouchableOpacity 
+              onPress={() => setThemeDropdownOpen(!themeDropdownOpen)}
+              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16, borderBottomWidth: themeDropdownOpen ? 0 : 1, borderBottomColor: colors.outline }}
+            >
+              <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.primaryContainer, alignItems: 'center', justifyContent: 'center', marginRight: 16 }}>
+                <Icon name="palette-line" size={20} color={colors.onPrimaryContainer} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontFamily: "Inter", fontSize: 15, fontWeight: "600", color: colors.onBackground }}>App Theme</Text>
+                <Text style={{ fontFamily: "Inter", fontSize: 12, color: colors.onSurfaceVariant, marginTop: 2 }}>
+                  {themeOptions.find(o => o.value === themePreference)?.label}
+                </Text>
+              </View>
+              <Icon name={themeDropdownOpen ? "arrow-up-s-line" : "arrow-down-s-line"} size={20} color={colors.onSurfaceVariant} />
+            </TouchableOpacity>
+
+            {themeDropdownOpen && (
+              <View style={{ backgroundColor: colors.surface, borderRadius: rounded.default, borderWidth: 1, borderColor: colors.outline, overflow: 'hidden', marginTop: 4 }}>
+                {themeOptions.map((option, index) => (
+                  <TouchableOpacity
+                    key={option.value}
+                    onPress={() => {
+                      setThemePreference(option.value);
+                      setThemeDropdownOpen(false);
+                    }}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingVertical: 12,
+                      paddingHorizontal: 16,
+                      borderBottomWidth: index === themeOptions.length - 1 ? 0 : 1,
+                      borderBottomColor: colors.outline,
+                      backgroundColor: themePreference === option.value ? colors.primaryContainer + "40" : "transparent"
+                    }}
+                  >
+                    <Icon name={option.icon as any} size={18} color={themePreference === option.value ? colors.primary : colors.onSurfaceVariant} style={{ marginRight: 12 }} />
+                    <Text style={{ fontFamily: "Inter", fontSize: 14, fontWeight: themePreference === option.value ? "700" : "500", color: themePreference === option.value ? colors.primary : colors.onSurface }}>
+                      {option.label}
+                    </Text>
+                    {themePreference === option.value && (
+                      <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                        <Icon name="check-line" size={18} color={colors.primary} />
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
 
           {/* Logout Button */}
           <View className="mt-12">

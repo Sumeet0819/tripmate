@@ -31,6 +31,7 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: "Profile",
+          href: null,
         }}
       />
     </Tabs>

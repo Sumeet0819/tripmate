@@ -27,7 +27,7 @@ const AnalyticsChart = ({ mode }: { mode: "light" | "dark" }) => {
             id="themeStripes"
             width={12}
             height={12}
-            patternTransform="rotate(45)"
+            patternTransform="rotate(45)" 
             patternUnits="userSpaceOnUse"
           >
             <Line

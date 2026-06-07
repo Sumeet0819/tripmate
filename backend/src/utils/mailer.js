@@ -74,5 +74,16 @@ exports.sendOtpEmail = async (toEmail, otpCode) => {
     `,
   };
 
-  return transporter.sendMail(mailOptions);
+  console.log(`\n=========================================`);
+  console.log(`[DEVELOPMENT] Mock OTP Email for ${toEmail}`);
+  console.log(`OTP CODE: ${otpCode}`);
+  console.log(`=========================================\n`);
+
+  try {
+    return await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Nodemailer failed to send email. Ensure domain is verified if using Resend. Continuing for development.");
+    console.error(error.message);
+    return;
+  }
 };

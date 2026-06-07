@@ -24,41 +24,43 @@ export const FeaturedTripCard: React.FC<FeaturedTripCardProps> = ({ trip }) => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.featuredCard, { backgroundColor: colors.surface }]}>
-      {/* Background Image */}
-      <Image source={{ uri: trip.image }} style={styles.featuredImage} resizeMode="cover" />
-      {/* Subtle overlay for balanced contrast */}
-      <View style={styles.vignetteOverlay} />
+    <View style={[styles.featuredCardContainer, { backgroundColor: colors.surface }]}>
+      <View style={styles.featuredCardInner}>
+        {/* Background Image */}
+        <Image source={{ uri: trip.image }} style={styles.featuredImage} resizeMode="cover" />
+        {/* Subtle overlay for balanced contrast */}
+        <View style={styles.vignetteOverlay} />
 
-      {/* Top Left: Minimal Category Badge */}
-      <View style={styles.categoryBadge}>
-        <Text style={styles.categoryBadgeText}>{trip.category}</Text>
-      </View>
-
-      {/* Top Right: Glassmorphic Duration Badge */}
-      <View style={styles.durationBadge}>
-        <Text style={styles.durationBadgeText}>{trip.duration.toUpperCase()}</Text>
-      </View>
-
-      {/* Bottom: Floating Glassmorphic Info Plate */}
-      <View style={styles.glassPlate}>
-        {/* Left column: Title & Location */}
-        <View style={styles.leftColumn}>
-          <Text style={styles.titleText} numberOfLines={1}>
-            {trip.title}
-          </Text>
-          <View style={styles.locationRow}>
-            <Icon name="map-pin-2-fill" size={10} color="rgba(255,255,255,0.7)" />
-            <Text style={styles.locationText} numberOfLines={1}>
-              {trip.location}
-            </Text>
-          </View>
+        {/* Top Left: Minimal Category Badge */}
+        <View style={styles.categoryBadge}>
+          <Text style={styles.categoryBadgeText}>{trip.category}</Text>
         </View>
 
-        {/* Right column: Price & Slots */}
-        <View style={styles.rightColumn}>
-          <Text style={styles.priceText}>{trip.price}</Text>
-          <Text style={styles.slotsText}>{trip.slotsLeft}</Text>
+        {/* Top Right: Glassmorphic Duration Badge */}
+        <View style={styles.durationBadge}>
+          <Text style={styles.durationBadgeText}>{trip.duration.toUpperCase()}</Text>
+        </View>
+
+        {/* Bottom: Floating Glassmorphic Info Plate */}
+        <View style={styles.glassPlate}>
+          {/* Left column: Title & Location */}
+          <View style={styles.leftColumn}>
+            <Text style={styles.titleText} numberOfLines={1}>
+              {trip.title}
+            </Text>
+            <View style={styles.locationRow}>
+              <Icon name="map-pin-2-fill" size={10} color="rgba(255,255,255,0.7)" />
+              <Text style={styles.locationText} numberOfLines={1}>
+                {trip.location}
+              </Text>
+            </View>
+          </View>
+
+          {/* Right column: Price & Slots */}
+          <View style={styles.rightColumn}>
+            <Text style={styles.priceText}>{trip.price}</Text>
+            <Text style={styles.slotsText}>{trip.slotsLeft}</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -66,17 +68,17 @@ export const FeaturedTripCard: React.FC<FeaturedTripCardProps> = ({ trip }) => {
 };
 
 const styles = StyleSheet.create({
-  featuredCard: {
-    width: width * 0.72,
+  featuredCardContainer: {
+    width: width * 0.9,
     height: 200,
+    borderRadius: 24, 
+  },
+  featuredCardInner: {
+    width: "100%",
+    height: "100%",
     borderRadius: 24,
     overflow: "hidden",
     position: "relative",
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
   },
   featuredImage: {
     width: "100%",

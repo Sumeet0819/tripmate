@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, RefreshControl } from "react-native";
 import { useTheme } from "../../utils/theme";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-remix-icon";
 import { OrganicHeader } from "../../components/OrganicHeader";
-import { FeaturedTripCard } from "../../components/FeaturedTripCard";
+import { FeaturedTripStack } from "../../components/FeaturedTripStack";
 import { TripCard } from "../../components/TripCard";
 import { useAppDispatch, useAppSelector } from "../../src/store/hooks";
 import { fetchTrips, Trip } from "../../src/store/slices/tripsSlice";
@@ -15,6 +15,13 @@ export default function HomeScreen() {
   const [search, setSearch] = useState("");
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [refreshing, setRefreshing] = useState(false);
+  
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await dispatch(fetchTrips({}));
+    setRefreshing(false);
+  }, [dispatch]);
   
   const { items: trips, status } = useAppSelector((state) => state.trips);
 
@@ -26,7 +33,7 @@ export default function HomeScreen() {
     id: trip.id,
     title: trip.title,
     location: trip.location,
-    duration: `${trip.duration} Days`,
+    duration: trip.duration,
     price: `₹${trip.price.toLocaleString("en-IN")}`,
     slotsLeft: trip.slots_left === 0 ? "Fully Booked" : `${trip.slots_left} slots left`,
     category: trip.category,
@@ -49,7 +56,7 @@ export default function HomeScreen() {
       <StatusBar style={mode === "light" ? "dark" : "light"} />
 
       {/* Interactive Organic Search Header */}
-      <OrganicHeader search={search} onSearchChange={setSearch} />
+      <OrganicHeader search={search} onSearchChange={setSearch} onProfilePress={() => router.push('/profile' as any)} />
 
       {/* Main Discover Layout */}
       <ScrollView
@@ -62,6 +69,14 @@ export default function HomeScreen() {
         }}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 110 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+          />
+        }
       >
         {/* Page Main Header */}
         <View className="px-6 mt-6">
@@ -112,21 +127,7 @@ export default function HomeScreen() {
               </Text>
             </View>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
-            >
-              {featuredTrips.map((trip) => (
-                <TouchableOpacity 
-                  key={trip.id} 
-                  activeOpacity={0.9} 
-                  onPress={() => router.push(`/trip/${trip.id}` as any)}
-                >
-                  <FeaturedTripCard trip={trip} />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+            <FeaturedTripStack trips={featuredTrips} />
           </View>
         )}
 

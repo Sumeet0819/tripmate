@@ -9,7 +9,7 @@ const { height } = Dimensions.get("window");
 
 export default function OnboardingScreen() {
   const navigation = useAppNavigation();
-  const { colors, mode, toggleTheme, rounded } = useTheme();
+  const { colors, mode, rounded } = useTheme();
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.background }}>
@@ -65,31 +65,6 @@ export default function OnboardingScreen() {
           right: -40,
         }}
       />
-
-      {/* Interactive Theme Switcher Header */}
-      <View className="absolute top-14 right-6 z-10">
-        <TouchableOpacity
-          onPress={toggleTheme}
-          className="w-10 h-10 items-center justify-center border"
-          style={{
-            borderRadius: rounded.full,
-            backgroundColor: colors.surfaceContainerLowest,
-            borderColor: colors.outlineVariant,
-            shadowColor: colors.secondary,
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.08,
-            shadowRadius: 4,
-          }}
-          activeOpacity={0.8}
-        >
-          <Icon
-            name={mode === "light" ? "moon-line" : "sun-line"}
-            size={18}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
-      </View>
-
       {/* Content */}
       <View className="flex-1 px-7 pt-24 justify-center">
         {/* Logo area */}
@@ -150,16 +125,16 @@ export default function OnboardingScreen() {
             className="flex-row items-center gap-1.5 border px-3.5 py-2"
             style={{
               borderRadius: rounded.full,
-              backgroundColor: colors.surfaceContainerHighest,
+              backgroundColor: colors.primary,
               borderColor: colors.outlineVariant,
             }}
           >
-            <Icon name="tent-fill" size={16} color={colors.secondary} />
+            <Icon name="tent-fill" size={16} color={colors.onPrimary} />
             <Text
               className="text-[13px] font-medium ml-1"
               style={{
                 fontFamily: "Inter",
-                color: colors.onSurfaceVariant,
+                color: colors.onPrimary,
               }}
             >
               Form Platoons
@@ -169,16 +144,16 @@ export default function OnboardingScreen() {
             className="flex-row items-center gap-1.5 border px-3.5 py-2"
             style={{
               borderRadius: rounded.full,
-              backgroundColor: colors.surfaceContainerHighest,
+              backgroundColor: colors.primary,
               borderColor: colors.outlineVariant,
             }}
           >
-            <Icon name="ticket-2-fill" size={16} color={colors.secondary} />
+            <Icon name="ticket-2-fill" size={16} color={colors.onPrimary} />
             <Text
               className="text-[13px] font-medium ml-1"
               style={{
                 fontFamily: "Inter",
-                color: colors.onSurfaceVariant,
+                color: colors.onPrimary,
               }}
             >
               Exclusive Deals
@@ -188,16 +163,16 @@ export default function OnboardingScreen() {
             className="flex-row items-center gap-1.5 border px-3.5 py-2"
             style={{
               borderRadius: rounded.full,
-              backgroundColor: colors.surfaceContainerHighest,
+              backgroundColor: colors.primary,
               borderColor: colors.outlineVariant,
             }}
           >
-            <Icon name="compass-3-fill" size={16} color={colors.secondary} />
+            <Icon name="compass-3-fill" size={16} color={colors.onPrimary} />
             <Text
               className="text-[13px] font-medium ml-1"
               style={{
                 fontFamily: "Inter",
-                color: colors.onSurfaceVariant,
+                color: colors.onPrimary,
               }}
             >
               Curated Trips
@@ -210,7 +185,7 @@ export default function OnboardingScreen() {
       <View className="px-7 pb-12 gap-3.5">
         <PillButton
           title="Get Started"
-          onPress={() => navigation.navigate(navigation.ROUTES.register)}
+          onPress={() => navigation.navigate(navigation.ROUTES.login)}
           variant="primary"
         />
 

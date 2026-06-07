@@ -7,6 +7,8 @@ import { useTheme } from '../../utils/theme';
 import { useAppDispatch, useAppSelector } from '../../src/store/hooks';
 import { fetchTripById, clearSelectedTrip } from '../../src/store/slices/tripsSlice';
 
+import { createPlatoonThunk } from '../../src/store/slices/platoonsSlice';
+
 export default function TripDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
@@ -24,8 +26,14 @@ export default function TripDetailScreen() {
     };
   }, [id, dispatch]);
 
-  const handleJoinPress = () => {
-    Alert.alert("Join Platoon", "This feature will integrate with the Platoons API shortly!");
+  const handleJoinPress = async () => {
+    try {
+      await dispatch(createPlatoonThunk(id as string)).unwrap();
+      Alert.alert("Success", "You have successfully created a platoon for this trip!");
+      router.back(); // Or router.push('/squads') if that screen exists
+    } catch (err) {
+      Alert.alert("Error", err as string || "Failed to join trip");
+    }
   };
 
   if (status === 'loading' || !trip) {
@@ -69,21 +77,25 @@ export default function TripDetailScreen() {
         </View>
 
         {/* Key Info Strip */}
-        <View style={[styles.infoStrip, { borderBottomColor: colors.outline, borderBottomWidth: 1 }]}>
+        <View style={styles.infoStrip}>
           <View style={styles.infoItem}>
-            <Icon name="time-line" size={20} color={colors.primary} />
+            <View style={[styles.iconCircle, { backgroundColor: colors.primaryContainer }]}>
+              <Icon name="time-line" size={20} color={colors.primary} />
+            </View>
             <Text style={[styles.infoLabel, { color: colors.onSurfaceVariant }]}>Duration</Text>
             <Text style={[styles.infoValue, { color: colors.onBackground }]}>{trip.duration} Days</Text>
           </View>
-          <View style={[styles.verticalDivider, { backgroundColor: colors.outline }]} />
           <View style={styles.infoItem}>
-            <Icon name="group-line" size={20} color={colors.primary} />
+            <View style={[styles.iconCircle, { backgroundColor: colors.primaryContainer }]}>
+              <Icon name="group-line" size={20} color={colors.primary} />
+            </View>
             <Text style={[styles.infoLabel, { color: colors.onSurfaceVariant }]}>Capacity</Text>
             <Text style={[styles.infoValue, { color: colors.onBackground }]}>{trip.slots_total} People</Text>
           </View>
-          <View style={[styles.verticalDivider, { backgroundColor: colors.outline }]} />
           <View style={styles.infoItem}>
-            <Icon name="user-star-line" size={20} color={colors.primary} />
+            <View style={[styles.iconCircle, { backgroundColor: colors.primaryContainer }]}>
+              <Icon name="user-star-line" size={20} color={colors.primary} />
+            </View>
             <Text style={[styles.infoLabel, { color: colors.onSurfaceVariant }]}>Provider</Text>
             <Text style={[styles.infoValue, { color: colors.onBackground }]} numberOfLines={1}>
               {trip.provider?.name || "Verified"}
@@ -105,7 +117,7 @@ export default function TripDetailScreen() {
                       <View style={[styles.dayLine, { backgroundColor: colors.outline }]} />
                     )}
                   </View>
-                  <View style={[styles.dayCard, { backgroundColor: colors.surface, borderColor: colors.outline }]}>
+                  <View style={[styles.dayCard, { backgroundColor: colors.surface }]}>
                     <Text style={[styles.dayTitle, { color: colors.primary }]}>Day {day.day}</Text>
                     <Text style={[styles.dayActivity, { color: colors.onSurface }]}>{day.activity}</Text>
                   </View>
@@ -122,7 +134,7 @@ export default function TripDetailScreen() {
       </ScrollView>
 
       {/* Sticky Bottom Bar */}
-      <View style={[styles.bottomBar, { backgroundColor: colors.surface, borderTopColor: colors.outline }]}>
+      <View style={[styles.bottomBar, { backgroundColor: colors.surface }]}>
         <View>
           <Text style={[styles.priceLabel, { color: colors.onSurfaceVariant }]}>Total Price</Text>
           <Text style={[styles.priceValue, { color: colors.primary }]}>
@@ -228,28 +240,32 @@ const styles = StyleSheet.create({
   },
   infoStrip: {
     flexDirection: 'row',
-    paddingVertical: 20,
-    paddingHorizontal: 12,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+  },
+  iconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   infoItem: {
     flex: 1,
     alignItems: 'center',
-    gap: 4,
   },
   infoLabel: {
     fontFamily: 'Inter',
     fontSize: 11,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    marginBottom: 4,
   },
   infoValue: {
     fontFamily: 'Montserrat',
     fontSize: 14,
     fontWeight: '700',
-  },
-  verticalDivider: {
-    width: 1,
-    height: '100%',
   },
   sectionContainer: {
     padding: 24,
@@ -287,7 +303,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     borderRadius: 16,
-    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   dayTitle: {
     fontFamily: 'Montserrat',
@@ -316,12 +336,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 32, // safe area padding
-    borderTopWidth: 1,
-    elevation: 10,
+    elevation: 20,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: -4 },
-    shadowRadius: 12,
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: -8 },
+    shadowRadius: 16,
   },
   priceLabel: {
     fontFamily: 'Inter',
